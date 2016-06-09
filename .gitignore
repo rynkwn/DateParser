@@ -12,6 +12,7 @@
 
 # Temporary files.
 testfile.rb
+dump.rb
 
 # Used by dotenv library to load environment variables.
 # .env
