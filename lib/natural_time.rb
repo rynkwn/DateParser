@@ -1,4 +1,4 @@
-require 'natural_time/NaturalDateParsing'
+require_relative 'natural_time/natural_date_parsing'
 
 module NaturalTime
   
