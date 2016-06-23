@@ -1,8 +1,8 @@
 module NaturalDateParsing
-    # Gets an array of possible dates for a message
+  # Gets an array of possible dates for a message
   # @param released is the date the message was initially sent out.
   # @param unique is a flag that signals whether we want to return unique dates only
-  def NaturalDateParsing.interpret_date(msg, released=Date.current.in_time_zone, unique=true)
+  def NaturalDateParsing.interpret_date(msg, released=nil, unique=true)
     possible_dates = []
     msg = msg.split(" ").map{|x| x.strip}
     for i in 1..(msg.length - 1)
@@ -32,7 +32,7 @@ module NaturalDateParsing
   # split by spaces.
   # @param str is an array containing 1-2 strings.
   # @param released is the date the message was initially sent out.
-  def NaturalDateParsing.interpret_phrase_as_date(str, released=Date.current.in_time_zone)
+  def NaturalDateParsing.interpret_phrase_as_date(str, released=nil)
     if str.size == 1
       # If the string is size 1, we assume it refers to a day of the week, or
       # something of the form XX/XX
