@@ -15,7 +15,7 @@ module NaturalTime
     
     date_parse = Proc.new{|x| Date.parse(x)}
     
-    interpreted_dates = NaturalDateParsing::interpret_Date(txt, Date.today, true)
+    interpreted_dates = NaturalDateParsing::interpret_Date(txt, Date.today)
     
     if unique
       interpreted_dates.uniq!

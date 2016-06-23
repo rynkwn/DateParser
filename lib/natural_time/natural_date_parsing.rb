@@ -2,12 +2,13 @@ module NaturalDateParsing
   # Gets an array of possible dates for a message
   # @param released is the date the message was initially sent out.
   # @param unique is a flag that signals whether we want to return unique dates only
-  def NaturalDateParsing.interpret_date(msg, released=nil, unique=true)
+  def NaturalDateParsing.interpret_date(text, released=nil)
     possible_dates = []
-    msg = msg.split(" ").map{|x| x.strip}
-    for i in 1..(msg.length - 1)
-      proposed_date_1 = interpret_phrase_as_date(msg[(i-1)..i], released)
-      proposed_date_2 = interpret_phrase_as_date([msg[i]], released)
+    words = text.split(" ").map{|x| x.strip}
+    
+    for i in 1..(words.length - 1)
+      proposed_date_1 = interpret_phrase_as_date(words[(i-1)..i], released)
+      proposed_date_2 = interpret_phrase_as_date([words[i]], released)
       
       if !proposed_date_1.nil?
         possible_dates << proposed_date_1
@@ -16,10 +17,6 @@ module NaturalDateParsing
       if !proposed_date_2.nil?
         possible_dates << proposed_date_2
       end
-    end
-    
-    if unique
-      possible_dates = possible_dates.uniq
     end
     
     return possible_dates
