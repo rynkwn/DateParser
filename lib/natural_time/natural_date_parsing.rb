@@ -1,3 +1,5 @@
+require_relative 'utils'
+
 module NaturalDateParsing
   # Gets an array of possible dates for a message
   # @param released is the date the message was initially sent out.
@@ -31,53 +33,7 @@ module NaturalDateParsing
   # @param released is the date the message was initially sent out.
   def NaturalDateParsing.interpret_phrase_as_date(str, released=nil)
     if str.size == 1
-      # If the string is size 1, we assume it refers to a day of the week, or
-      # something of the form XX/XX
-      days = ['mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun',
-              'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday',
-              'sunday',
-              'tues']
-      relative_days = ['today', 'tomorrow', 'tonight']
-      str = str[0]  # We need to unwrap the singleton array.
-      if days.include? str
-        proposed_date = Date.parse(str)
-        tentative_day = proposed_date.day
-        
-        # If the tentative_day is less than the current day, we assume it takes
-        # place next week.
-        days_in_week = 7
-        proposed_date = (tentative_day < released.day) ? proposed_date + days_in_week :
-                                                         proposed_date
-        
-        return proposed_date
-      end
-      
-      if relative_days.include? str
-        if str == 'today' || str == 'tonight'
-          return released
-        else
-          tomorrow = 1
-          return released + tomorrow
-        end
-      end
-      
-      if str.include? '/'
-        # In this case, we assume the string is of the form XX/XX
-        samp = str.split('/')
-        month = samp[0].to_i
-        day = samp[1].to_i
-        
-        if month > 0 && month <= 12 && day > 0 && day <= 31
-          # TODO: IMPROVE EXCEPTION HANDLING.
-          # bolted exception handling.
-          begin
-            return Date.parse(str)
-          rescue ArgumentError
-            return nil
-          end
-        end
-      end
-      
+      parse_one_word(str, released)
     elsif str.size == 2
       # Now we assume it refers to a month day, or MON ## combination.
       month = ['jan', 'feb', 'mar', 'may', 'june', 'july', 'aug', 'sept', 'oct',
@@ -96,5 +52,45 @@ module NaturalDateParsing
     end
     
     return nil
+  end
+  
+  def NaturalDateParsing.parse_one_word(word, released)
+    # If the string is size 1, we assume it refers to a day of the week, or
+    # something of the form XX/XX
+    days = ['mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun',
+            'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday',
+            'sunday',
+            'tues']
+    relative_days = ['today', 'tomorrow', 'tonight']
+    word = word[0]  # We need to unwrap the singleton array.
+    if days.include? word
+      proposed_date = Date.parse(word)
+      tentative_day = proposed_date.day
+      
+      # If we have the released date, we can try to be a little smarter
+      if(! released.nil?)
+        # If the tentative_day is less than the current day, we assume it takes
+        # place next week.
+        days_in_week = 7
+        proposed_date = (tentative_day < released.day) ? proposed_date + days_in_week :
+                                                         proposed_date
+        
+        return proposed_date
+      end
+    end
+    
+    if relative_days.include? word
+      if word == 'today' || word == 'tonight'
+        return released
+      else
+        tomorrow = 1
+        return released + tomorrow
+      end
+    end
+    
+    if word.include? '/'
+      # In this case, we assume the string is of the form XX/XX
+      Utils::parse_slash_date(word)
+    end
   end
 end
