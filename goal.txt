@@ -1,0 +1,16 @@
+Since my time working on this project is limited to my spare time after work,
+let's introduce some organization.
+
+My hopes for this library are as follows:
+1) Creating a fast, intuitive, and flexible tool that'll find dates in natural
+language text.
+2) Flexibility is key. Not just in how things are parsed, but in how the library
+itself is meant to be used. The library will not be an expansive one, but instead
+is meant to help improve the code of others.
+2.a) This flexibility will be manifest primarily in what's allowed/expected
+to be passed in, and in what's eventually spit out.
+
+Example usage:
+parse("There are some dates in this text....") -> [list of probable dates]
+parse("There are some dates in this text", released=SOME_DATE)
+-> [list of probable dates given that this block of text was sent on SOME_DATE]
