@@ -1,6 +1,32 @@
-require_relative 'utils'
+require_relative 'date_utils'
 
 module NaturalDateParsing
+  
+  SINGLE_DAYS = [
+                 'mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun',
+                 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 
+                 'saturday', 'sunday', 'tues'
+                ]
+                
+  RELATIVE_DAYS = ['today', 'tomorrow', 'tonight']
+  
+  MONTH = [
+           'jan', 'feb', 'mar', 'may', 'june', 'july', 'aug', 'sept', 'oct',
+           'nov', 'dec',
+           'january', 'february', 'march', 'april', 'august', 'september',
+           'october', 'november', 'december'
+          ]
+          
+  NUMERIC_DAY = [
+                 ('1'..'31').to_a, 
+                 '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', 
+                 '10th', '11th', '12th', '13th', '14th', '15th', '16th', '17th', 
+                 '18th', '19th', '20th', '21st', '22nd', '23rd','24th', '25th', 
+                 '26th', '27th', '28th', '29th', '30th', '31st'
+                ].flatten
+  
+  
+  
   # Gets an array of possible dates for a message
   # @param released is the date the message was initially sent out.
   # @param unique is a flag that signals whether we want to return unique dates only
@@ -11,6 +37,7 @@ module NaturalDateParsing
     for i in 1..(words.length - 1)
       proposed_date_1 = interpret_phrase_as_date(words[(i-1)..i], released)
       proposed_date_2 = interpret_phrase_as_date([words[i]], released)
+      
       
       if !proposed_date_1.nil?
         possible_dates << proposed_date_1
@@ -35,20 +62,7 @@ module NaturalDateParsing
     if str.size == 1
       parse_one_word(str, released)
     elsif str.size == 2
-      # Now we assume it refers to a month day, or MON ## combination.
-      month = ['jan', 'feb', 'mar', 'may', 'june', 'july', 'aug', 'sept', 'oct',
-               'nov', 'dec',
-               'january', 'february', 'march', 'april', 'august', 'september',
-               'october', 'november', 'december']
-      day = [('1'..'31').to_a, 
-             '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th',
-             '11th', '12th', '13th', '14th', '15th', '16th', '17th', '18th',
-             '19th', '20th', '21st', '22nd', '23rd','24th', '25th', '26th',
-             '27th', '28th', '29th', '30th', '31st'].flatten
       
-      if month.include?(str[0]) && day.include?(str[1])
-        return Date.parse(str.join(" "))
-      end
     end
     
     return nil
@@ -57,13 +71,10 @@ module NaturalDateParsing
   def NaturalDateParsing.parse_one_word(word, released)
     # If the string is size 1, we assume it refers to a day of the week, or
     # something of the form XX/XX
-    days = ['mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun',
-            'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday',
-            'sunday',
-            'tues']
-    relative_days = ['today', 'tomorrow', 'tonight']
+
+
     word = word[0]  # We need to unwrap the singleton array.
-    if days.include? word
+    if SINGLE_DAYS.include? word
       proposed_date = Date.parse(word)
       tentative_day = proposed_date.day
       
@@ -79,7 +90,7 @@ module NaturalDateParsing
       end
     end
     
-    if relative_days.include? word
+    if RELATIVE_DAYS.include? word
       if word == 'today' || word == 'tonight'
         return released
       else
@@ -90,7 +101,15 @@ module NaturalDateParsing
     
     if word.include? '/'
       # In this case, we assume the string is of the form XX/XX
-      Utils::parse_slash_date(word)
+      DateUtils::parse_slash_date(word)
+    end
+  end
+  
+  def NaturalDateParsing.parse_two_words(words, released)
+    # Now we assume it refers to a month day, or MON ## combination.
+
+    if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1])
+      return Date.parse(words.join(" "))
     end
   end
 end
