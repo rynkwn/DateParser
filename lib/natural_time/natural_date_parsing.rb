@@ -36,17 +36,19 @@ module NaturalDateParsing
     text = Utils::clean_str(text)
     words = text.split(" ").map{|x| x.strip}
     
-    puts words
     for i in 2..(words.length - 1)
-      proposed_date_1 = parse_one_word([words[i]], released)
-      proposed_date_2 = parse_two_words(words[(i-1)..i], released)
-      proposed_date_3 = parse_three_words([words[(i-2)..i], released])
+      proposed_date_1 = parse_one_word(words[i], released)
+      proposed_date_2 = parse_two_words(words[(i-2)..i], released)
+      proposed_date_3 = parse_three_words(words[(i-2)..i], released)
       
       # If the bigger phrases work, we ignore the smaller phrases.
-      
-      !proposed_date_1.nil? ? possible_dates << proposed_date_1 : nil
-      !proposed_date_2.nil? ? possible_dates << proposed_date_2 : nil
-      !proposed_date_3.nil? ? possible_dates << proposed_date_3 : nil
+      if !proposed_date_3.nil?
+        possible_dates << proposed_date_3
+      elsif !proposed_date_2.nil?
+        possible_dates << proposed_date_2
+      elsif !proposed_date_1.nil?
+        possible_dates << proposed_date_1
+      end
     end
     
     return possible_dates
@@ -98,7 +100,7 @@ module NaturalDateParsing
   ## We assume it's the following format: MONTH NUM, YEAR
   def NaturalDateParsing.parse_three_words(words, released = nil)
     if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1]) && Utils::is_int?(words[2])
-      Date.parse(words.join(" "))
+      return Date.parse(words.join(" "))
     end
   end
 end
