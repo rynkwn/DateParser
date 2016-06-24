@@ -1,4 +1,5 @@
 require_relative 'date_utils'
+require_relative "utils"
 
 module NaturalDateParsing
   
@@ -30,14 +31,18 @@ module NaturalDateParsing
   # Gets an array of possible dates for a message
   # @param released is the date the message was initially sent out.
   # @param unique is a flag that signals whether we want to return unique dates only
-  def NaturalDateParsing.interpret_date(text, released=nil)
+  def NaturalDateParsing.interpret_date(text, released = nil)
     possible_dates = []
+    text = Utils::clean_str(text)
     words = text.split(" ").map{|x| x.strip}
     
+    puts words
     for i in 2..(words.length - 1)
       proposed_date_1 = parse_one_word([words[i]], released)
       proposed_date_2 = parse_two_words(words[(i-1)..i], released)
-      proposed_date_3 = interpret_phrase_as_date([words[(i-2)..i], released])
+      proposed_date_3 = parse_three_words([words[(i-2)..i], released])
+      
+      # If the bigger phrases work, we ignore the smaller phrases.
       
       !proposed_date_1.nil? ? possible_dates << proposed_date_1 : nil
       !proposed_date_2.nil? ? possible_dates << proposed_date_2 : nil
@@ -47,7 +52,7 @@ module NaturalDateParsing
     return possible_dates
   end
   
-  def NaturalDateParsing.parse_one_word(word, released)
+  def NaturalDateParsing.parse_one_word(word, released = nil)
     # If the string is size 1, we assume it refers to a day of the week, or
     # something of the form XX/XX
 
@@ -84,15 +89,16 @@ module NaturalDateParsing
   end
   
   # Now we assume it refers to a month day, or MON ## combination.
-  def NaturalDateParsing.parse_two_words(words, released)
+  def NaturalDateParsing.parse_two_words(words, released = nil)
     if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1])
       return Date.parse(words.join(" "))
     end
   end
   
   ## We assume it's the following format: MONTH NUM, YEAR
-  def NaturalDateParsing.parse_three_words(words, released)
-    if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1])
+  def NaturalDateParsing.parse_three_words(words, released = nil)
+    if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1]) && Utils::is_int?(words[2])
+      Date.parse(words.join(" "))
     end
   end
 end

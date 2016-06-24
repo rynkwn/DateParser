@@ -1,4 +1,5 @@
 require_relative 'natural_time/natural_date_parsing'
+require_relative 'natural_time/utils'
 
 module NaturalTime
   
@@ -11,7 +12,7 @@ module NaturalTime
   # From a Daily Message, grab date in the natural message, if possible.
   # Otherwise, default to my provided date.
   def NaturalTime.parse(txt, unique=false)
-    txt = txt.downcase.gsub(/[^a-z0-9\s\/]/i, '')
+    txt = Utils::clean_str(txt)
     
     date_parse = Proc.new{|x| Date.parse(x)}
     
