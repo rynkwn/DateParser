@@ -34,44 +34,22 @@ module NaturalDateParsing
     possible_dates = []
     words = text.split(" ").map{|x| x.strip}
     
-    for i in 1..(words.length - 1)
-      proposed_date_1 = interpret_phrase_as_date(words[(i-1)..i], released)
-      proposed_date_2 = interpret_phrase_as_date([words[i]], released)
+    for i in 2..(words.length - 1)
+      proposed_date_1 = parse_one_word([words[i]], released)
+      proposed_date_2 = parse_two_words(words[(i-1)..i], released)
+      proposed_date_3 = interpret_phrase_as_date([words[(i-2)..i], released])
       
-      
-      if !proposed_date_1.nil?
-        possible_dates << proposed_date_1
-      end
-      
-      if !proposed_date_2.nil?
-        possible_dates << proposed_date_2
-      end
+      !proposed_date_1.nil? ? possible_dates << proposed_date_1 : nil
+      !proposed_date_2.nil? ? possible_dates << proposed_date_2 : nil
+      !proposed_date_3.nil? ? possible_dates << proposed_date_3 : nil
     end
     
     return possible_dates
   end
   
-  # Looks at a small phrase and tries to see if it refers to a date. If it is a date
-  # we return the appropriate date, formatted.
-  # otherwise we return nil.
-  # We assume the string is downcased, stripped of any punctuation, and in an array
-  # split by spaces.
-  # @param str is an array containing 1-2 strings.
-  # @param released is the date the message was initially sent out.
-  def NaturalDateParsing.interpret_phrase_as_date(str, released=nil)
-    if str.size == 1
-      parse_one_word(str, released)
-    elsif str.size == 2
-      
-    end
-    
-    return nil
-  end
-  
   def NaturalDateParsing.parse_one_word(word, released)
     # If the string is size 1, we assume it refers to a day of the week, or
     # something of the form XX/XX
-
 
     word = word[0]  # We need to unwrap the singleton array.
     if SINGLE_DAYS.include? word
@@ -105,11 +83,16 @@ module NaturalDateParsing
     end
   end
   
+  # Now we assume it refers to a month day, or MON ## combination.
   def NaturalDateParsing.parse_two_words(words, released)
-    # Now we assume it refers to a month day, or MON ## combination.
-
     if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1])
       return Date.parse(words.join(" "))
+    end
+  end
+  
+  ## We assume it's the following format: MONTH NUM, YEAR
+  def NaturalDateParsing.parse_three_words(words, released)
+    if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1])
     end
   end
 end
