@@ -5,7 +5,13 @@ require_relative "../natural_time"
 
 describe NaturalDateParsing do
   
-  before do
+  #########################################################
+  ##
+  ## Basic Mechanics Testing
+  ##
+  
+  before :each do
+    
     @date = "April 6th, 2014"
     @text = "Remember to meet me on April 6th, 2014, alright?"
     @paragraph = "April 6th, 2014 isn't good for me. We should meet instead on\n" +
@@ -38,4 +44,48 @@ describe NaturalDateParsing do
       end
     end
   end
+end
+
+describe NaturalDateParsing do
+  
+  #########################################################
+  ##
+  ## Edge Cases. More Colloquial Language. More complicated phrases.
+  ##
+  
+  ## TODO: In the future, we may split this off into different tests.
+  describe ".interpret_date" do
+    context "Running a battery of colloquial/edge case tests" do
+      
+      @texts = []
+      @released = []
+      @answers = []
+      
+      @texts << "La Puerta del Conde (The Count's Gate) is the site in Santo" + 
+      "Domingo, Dominican Republic where Francisco del Rosario Sánchez, one of the" + 
+      "Dominican Founding Fathers, proclaimed Dominican independence and raised the" + 
+      "first Dominican Flag, on February 27, 1844."
+      @released << nil
+      @answers << [Date.parse("February 27, 1844")]
+      
+      @texts << "We should go on the 4th if we can."
+      @released << Date.parse("July 1st 2016")
+      @answers << [Date.parse("July 4th, 2016")]
+      
+      @texts << "Newsflash: things happen on 02/12!"
+      @released << Date.parse("January 1st, 1994")
+      @answers << [Date.parse("February 12, 1994")]
+      
+      #@text4 = "Do you remember/ The 21st night of September?"
+      #@released4 = nil
+      #@answer4 = [Date.parse("September 21")]
+      
+      for i in 0..(@texts.length - 1) do
+        it "returns the expected answer for case " + i.to_s do
+          expect(NaturalDateParsing::interpret_date(@texts[i], @released[i])).to eql(@answers[i])
+        end
+      end
+    end
+  end
+  
 end
