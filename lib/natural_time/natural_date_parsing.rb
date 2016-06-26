@@ -36,19 +36,51 @@ module NaturalDateParsing
     text = Utils::clean_str(text)
     words = text.split(" ").map{|x| x.strip}
     
-    for i in 2..(words.length - 1)
-      proposed_date_1 = parse_one_word(words[i], released)
-      proposed_date_2 = parse_two_words(words[(i-2)..i], released)
-      proposed_date_3 = parse_three_words(words[(i-2)..i], released)
+    # We use the while loop, as apparently there are cases where we try to subset
+    # words despite the value of i being >= words.length - 3
+    # TODO: Figure out why the above happens. Preferably return to for loop.
+    
+    i = 0
+    
+    while (i <= words.length - 3) do
+      subset_words = words[i..(i+2)]
       
-      # If the bigger phrases work, we ignore the smaller phrases.
-      if !proposed_date_3.nil?
-        possible_dates << proposed_date_3
-      elsif !proposed_date_2.nil?
-        possible_dates << proposed_date_2
-      elsif !proposed_date_1.nil?
-        possible_dates << proposed_date_1
+      proposed_date = parse_three_words(subset_words, released)
+      
+      if(! proposed_date.nil?)
+        possible_dates << proposed_date
+        words = words - subset_words
       end
+      
+      i += 1
+    end
+    
+    i = 0
+    
+    while (i <= words.length - 2) do
+      subset_words = words[i..(i+1)]
+      proposed_date = parse_two_words(subset_words, released)
+      
+      if(! proposed_date.nil?)
+        possible_dates << proposed_date
+        words = words - subset_words
+      end
+      
+      i += 1
+    end
+    
+    i = 0
+    
+    while (i <= words.length - 1) do
+      subset_words = words[i]
+      proposed_date = parse_one_word(subset_words, released)
+      
+      if(! proposed_date.nil?)
+        possible_dates << proposed_date
+        words = words - subset_words
+      end
+      
+      i += 1
     end
     
     return possible_dates
