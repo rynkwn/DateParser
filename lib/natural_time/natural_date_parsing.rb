@@ -88,6 +88,12 @@ module NaturalDateParsing
       # In this case, we assume the string is of the form XX/XX
       DateUtils::parse_slash_date(word)
     end
+    
+    if NUMERIC_DAY.include? word
+      if(! released.nil?)
+        
+      end
+    end
   end
   
   # Now we assume it refers to a month day, or MON ## combination.

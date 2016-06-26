@@ -46,6 +46,7 @@ describe NaturalDateParsing do
   end
 end
 
+
 describe NaturalDateParsing do
   
   #########################################################
@@ -53,34 +54,40 @@ describe NaturalDateParsing do
   ## Edge Cases. More Colloquial Language. More complicated phrases.
   ##
   
-  ## TODO: In the future, we may split this off into different tests.
   describe ".interpret_date" do
-    context "Running a battery of colloquial/edge case tests" do
-      texts = []
-      released = []
-      answers = []
+    
+    context "Given a longer sentence containing a date" do
+      text = "La Puerta del Conde (The Count's Gate) is the site in Santo" + 
+        "Domingo, Dominican Republic where Francisco del Rosario Sánchez, one of the" + 
+        "Dominican Founding Fathers, proclaimed Dominican independence and raised the" + 
+        "first Dominican Flag, on February 27, 1844."
+      released = nil
+      answer = [Date.parse("February 27, 1844")]
       
-      texts << "La Puerta del Conde (The Count's Gate) is the site in Santo" + 
-      "Domingo, Dominican Republic where Francisco del Rosario Sánchez, one of the" + 
-      "Dominican Founding Fathers, proclaimed Dominican independence and raised the" + 
-      "first Dominican Flag, on February 27, 1844."
-      released << nil
-      answers << [Date.parse("February 27, 1844")]
-      
-      texts << "We should go on the 4th if we can."
-      released << Date.parse("July 1st 2016")
-      answers << [Date.parse("July 4th, 2016")]
-      
-      texts << "Newsflash: things happen on 02/12!"
-      released << Date.parse("January 1st, 1994")
-      answers << [Date.parse("February 12, 1994")]
-      
-      for i in 0..(texts.length - 1) do
-        it "returns the expected answer for case " + i.to_s do
-          expect(NaturalDateParsing::interpret_date(texts[i], released[i])).to eql(answers[i])
-        end
+      it "captures the single date" do
+        expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
       end
     end
+    
+    context "Colloquial use of date 1" do
+      text = "We should go on the 4th if we can."
+      released = Date.parse("July 1st 2016")
+      answer = [Date.parse("July 4th, 2016")]
+      
+      it "correctly uses the released parameter" do
+        expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
+      end
+    end
+    
+    context "Correct use of XX/XX format 1" do
+      text = "Newsflash: things happen on 02/12!"
+      released = Date.parse("January 1st, 1994")
+      answer = [Date.parse("February 12, 1994")]
+      
+      it "correctly grabs the date" do
+        expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
+      end
+    end
+    
   end
-  
 end
