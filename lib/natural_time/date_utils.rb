@@ -15,4 +15,12 @@ module DateUtils
       end
     end
   end
+  
+  # We parse a numeric date (1st, 2nd, 3rd, e.t.c.) given a release date
+  def DateUtils.parse_numeric(word, released = nil)
+    diff_in_months = released.nil? ? 0 : (released.year * 12 + released.month) - 
+                                         (Date.today.year * 12 + Date.today.month)
+    
+    Date.parse(word) >> diff_in_months
+  end
 end

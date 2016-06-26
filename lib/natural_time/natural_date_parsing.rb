@@ -73,11 +73,12 @@ module NaturalDateParsing
     
     while (i <= words.length - 1) do
       subset_words = words[i]
+      
       proposed_date = parse_one_word(subset_words, released)
       
       if(! proposed_date.nil?)
         possible_dates << proposed_date
-        words = words - subset_words
+        words = words - [subset_words]
       end
       
       i += 1
@@ -89,8 +90,7 @@ module NaturalDateParsing
   def NaturalDateParsing.parse_one_word(word, released = nil)
     # If the string is size 1, we assume it refers to a day of the week, or
     # something of the form XX/XX
-
-    word = word[0]  # We need to unwrap the singleton array.
+    
     if SINGLE_DAYS.include? word
       proposed_date = Date.parse(word)
       tentative_day = proposed_date.day
@@ -122,9 +122,7 @@ module NaturalDateParsing
     end
     
     if NUMERIC_DAY.include? word
-      if(! released.nil?)
-        
-      end
+      DateUtils::parse_numeric(word, released)
     end
   end
   
