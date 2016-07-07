@@ -89,5 +89,45 @@ describe NaturalDateParsing do
       end
     end
     
+    context "Correctly parses yesterday" do
+      text = "Yesterday was certainly a day."
+      released = nil
+      answer = [Date.parse("January 11, 1994")]
+      
+      it "correctly grabs the date" do
+        expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
+      end
+    end
+    
+    context "Correctly parses yesterday with a released date" do
+      text = "Yesterday was certainly a day."
+      released = Date.parse("January 12, 1994")
+      answer = [Date.parse("January 11, 1994")]
+      
+      it "correctly grabs the date" do
+        expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
+      end
+    end
+    
+    context "Single year is correctly parsed" do
+      text = "In 1492 Columbus sailed the ocean blue."
+      released = nil
+      answer = [Date.parse("January 1, 1492")]
+      
+      it "correctly grabs the date" do
+        expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
+      end
+    end
+    
+    context "Correctly parses month and day in middle of sentence" do
+      text = "Something something something march 4 something something"
+      released = Date.parse("Jan 1, 2004")
+      answer = [Date.parse("March 4, 2004")]
+      
+      it "correctly grabs the date" do
+        expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
+      end
+    end
+    
   end
 end
