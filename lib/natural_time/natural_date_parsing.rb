@@ -118,11 +118,11 @@ module NaturalDateParsing
     
     if word.include? '/'
       # In this case, we assume the string is of the form XX/XX
-      DateUtils::parse_slash_date(word)
+      return DateUtils::parse_slash_date(word, released)
     end
     
     if NUMERIC_DAY.include? word
-      DateUtils::parse_numeric(word, released)
+      return DateUtils::parse_numeric(word, released)
     end
   end
   

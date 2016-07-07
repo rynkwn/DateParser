@@ -1,7 +1,7 @@
 module DateUtils
   # Parse words of the form XX/XX
-  def DateUtils.parse_slash_date(word)
-    samp = str.split('/')
+  def DateUtils.parse_slash_date(word, released = nil)
+    samp = word.split('/')
     month = samp[0].to_i
     day = samp[1].to_i
     
@@ -9,7 +9,12 @@ module DateUtils
       # TODO: IMPROVE EXCEPTION HANDLING.
       # bolted exception handling.
       begin
-        return Date.parse(word)
+        proposed_date = Date.parse(word)
+        if(! released.nil?) ## We're sensitive to only years here.
+          years_diff = Date.today.year - released.year
+          proposed_date = proposed_date << (12 * years_diff)
+        end
+        return proposed_date
       rescue ArgumentError
         return nil
       end
@@ -23,4 +28,11 @@ module DateUtils
     
     Date.parse(word) >> diff_in_months
   end
+  
+  # Effectively shifts start date for Date.parse() operations.
+  #def DateUtils.shift_start_date(old_date, new_start_date)
+    # Parsing a relative day (Sensitive to week, month, year)
+    # Parsing a relative month (Sensitive to year)
+    
+  #end
 end
