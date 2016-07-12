@@ -9,7 +9,7 @@ module NaturalDateParsing
                  'saturday', 'sunday', 'tues'
                 ]
                 
-  RELATIVE_DAYS = ['today', 'tomorrow', 'tonight']
+  RELATIVE_DAYS = ['today', 'tomorrow', 'tonight', 'yesterday']
   
   MONTH = [
            'jan', 'feb', 'mar', 'may', 'june', 'july', 'aug', 'sept', 'oct',
@@ -109,10 +109,20 @@ module NaturalDateParsing
     
     if RELATIVE_DAYS.include? word
       if word == 'today' || word == 'tonight'
-        return released
+        if released.nil?
+          return Date.today
+        else
+          return released
+        end
+      elsif word == 'yesterday'
+        if released.nil?
+          return Date.today - 1
+        else
+          return released - 1
+        end
       else
         tomorrow = 1
-        return released + tomorrow
+        return released + tomorrow ## Double check this.
       end
     end
     
