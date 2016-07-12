@@ -89,17 +89,17 @@ describe NaturalDateParsing do
       end
     end
     
-    context "Correctly parses yesterday" do
+    context "Given yesterday" do
       text = "Yesterday was certainly a day."
       released = nil
-      answer = [Date.parse("January 11, 1994")]
+      answer = [Date.today - 1]
       
       it "correctly grabs the date" do
         expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
       end
     end
     
-    context "Correctly parses yesterday with a released date" do
+    context "Given yesterday with a released date" do
       text = "Yesterday was certainly a day."
       released = Date.parse("January 12, 1994")
       answer = [Date.parse("January 11, 1994")]
