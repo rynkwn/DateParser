@@ -1,6 +1,6 @@
 module DateUtils
   # Parse words of the form XX/XX
-  def DateUtils.parse_slash_date(word, released = nil)
+  def DateUtils.slash_date(word, released = nil)
     samp = word.split('/')
     month = samp[0].to_i
     day = samp[1].to_i
@@ -22,7 +22,7 @@ module DateUtils
   end
   
   # We parse a numeric date (1st, 2nd, 3rd, e.t.c.) given a release date
-  def DateUtils.parse_numeric(word, released = nil)
+  def DateUtils.numeric(word, released = nil)
     diff_in_months = released.nil? ? 0 : (released.year * 12 + released.month) - 
                                          (Date.today.year * 12 + Date.today.month)
     

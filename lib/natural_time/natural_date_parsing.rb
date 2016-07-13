@@ -31,7 +31,8 @@ module NaturalDateParsing
   # Gets an array of possible dates for a message
   # @param released is the date the message was initially sent out.
   # @param unique is a flag that signals whether we want to return unique dates only
-  def NaturalDateParsing.interpret_date(text, released = nil)
+  # @param parse_single_years a flag to signal whether we should parse for single years.
+  def NaturalDateParsing.interpret_date(text, released = nil, parse_single_years = false)
     possible_dates = []
     text = Utils::clean_str(text)
     words = text.split(" ").map{|x| x.strip}
@@ -74,7 +75,7 @@ module NaturalDateParsing
     while (i <= words.length - 1) do
       subset_words = words[i]
       
-      proposed_date = parse_one_word(subset_words, released)
+      proposed_date = parse_one_word(subset_words, released, parse_single_years)
       
       if(! proposed_date.nil?)
         possible_dates << proposed_date
@@ -128,11 +129,16 @@ module NaturalDateParsing
     
     if word.include? '/'
       # In this case, we assume the string is of the form XX/XX
-      return DateUtils::parse_slash_date(word, released)
+      return DateUtils::slash_date(word, released)
     end
     
     if NUMERIC_DAY.include? word
-      return DateUtils::parse_numeric(word, released)
+      return DateUtils::numeric(word, released)
+    end
+    
+    # In this case, we assume it's a year!
+    if Utils::is_int? word
+      return Date.parse("Jan 1," + word)
     end
   end
   
