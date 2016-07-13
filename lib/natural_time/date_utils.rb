@@ -51,8 +51,14 @@ module DateUtils
     
   #end
   
-  def DateUtils.default_date(year)
+  def DateUtils.default_year(year)
     return Date.parse("Jan 1 " + year)
+  end
+  
+  ## TODO. NOT SENSITIVE TO YEAR.
+  def DateUtils.default_month(month, released = nil)
+    this_year = Date.today.year
+    return Date.parse(month + " " + this_year.to_s)
   end
   
   def DateUtils.suffix(number)

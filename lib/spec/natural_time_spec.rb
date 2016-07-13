@@ -218,7 +218,7 @@ describe NaturalDateParsing do
       "implementation on January 1, 2018, a Monday."
       released = Date.parse("July 6, 2016")
       answer = [Date.parse("January 1, 2018"),
-                Date.parse("July 4, 2016")] # Reconsider
+                Date.parse("July 11, 2016")] # Reconsider
       
       it "correctly grabs the date" do
         expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)

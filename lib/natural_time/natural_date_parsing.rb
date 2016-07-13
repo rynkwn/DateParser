@@ -136,9 +136,13 @@ module NaturalDateParsing
       return DateUtils::numeric(word, released)
     end
     
+    if MONTH.include? word
+      return DateUtils::default_month(word, released)
+    end
+    
     # In this case, we assume it's a year!
     if parse_single_years && (Utils::is_int? word)
-      return DateUtils::default_date(word)
+      return DateUtils::default_year(word)
     end
   end
   
