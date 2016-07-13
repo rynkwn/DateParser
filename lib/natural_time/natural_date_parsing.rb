@@ -18,13 +18,15 @@ module NaturalDateParsing
            'october', 'november', 'december'
           ]
           
-  NUMERIC_DAY = [
-                 ('1'..'31').to_a, 
-                 '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', 
-                 '10th', '11th', '12th', '13th', '14th', '15th', '16th', '17th', 
-                 '18th', '19th', '20th', '21st', '22nd', '23rd','24th', '25th', 
-                 '26th', '27th', '28th', '29th', '30th', '31st'
-                ].flatten
+  NUMERIC_DAY = [('1'..'31').to_a].flatten
+                
+  SUFFIXED_NUMERIC_DAY = [
+                           '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', 
+                           '8th', '9th', '10th', '11th', '12th', '13th', '14th', 
+                           '15th', '16th', '17th', '18th', '19th', '20th', 
+                           '21st', '22nd', '23rd','24th', '25th', 
+                           '26th', '27th', '28th', '29th', '30th', '31st'
+                         ]
   
   
   
@@ -132,7 +134,7 @@ module NaturalDateParsing
       return DateUtils::slash_date(word, released)
     end
     
-    if NUMERIC_DAY.include? word
+    if SUFFIXED_NUMERIC_DAY.include? word
       return DateUtils::numeric(word, released)
     end
     
@@ -149,7 +151,7 @@ module NaturalDateParsing
   
   # Now we assume it refers to a month day, or MON ## combination.
   def NaturalDateParsing.parse_two_words(words, released = nil)
-    if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1])
+    if MONTH.include?(words[0]) && _weak_day?(words[1])
       return DateUtils::month_day(words, released)
     end
   end
@@ -157,8 +159,15 @@ module NaturalDateParsing
   
   ## We assume it's the following format: MONTH NUM, YEAR
   def NaturalDateParsing.parse_three_words(words, released = nil)
-    if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1]) && Utils::is_int?(words[2])
+    if MONTH.include?(words[0]) && _weak_day?(words[1]) && Utils::is_int?(words[2])
       return Date.parse(words.join(" "))
     end
+  end
+  
+  
+  private
+  
+  def NaturalDateParsing._weak_day?(word)
+    return (NUMERIC_DAY.include? word) || (SUFFIXED_NUMERIC_DAY.include? word)
   end
 end
