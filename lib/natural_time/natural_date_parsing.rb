@@ -136,12 +136,14 @@ module NaturalDateParsing
     end
   end
   
+  
   # Now we assume it refers to a month day, or MON ## combination.
   def NaturalDateParsing.parse_two_words(words, released = nil)
     if MONTH.include?(words[0]) && NUMERIC_DAY.include?(words[1])
-      return Date.parse(words.join(" "))
+      return DateUtils::month_day(words, released)
     end
   end
+  
   
   ## We assume it's the following format: MONTH NUM, YEAR
   def NaturalDateParsing.parse_three_words(words, released = nil)

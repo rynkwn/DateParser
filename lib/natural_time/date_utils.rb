@@ -29,6 +29,15 @@ module DateUtils
     Date.parse(word) >> diff_in_months
   end
   
+  # Parsing things like "March 4"
+  def DateUtils.month_day(words, released = nil)
+    proposed_date = Date.parse(words.join(" "))
+    
+    diff_in_years = released.nil? ? 0 : (released.year - Date.today.year)
+    
+    return proposed_date >> diff_in_years * 12
+  end
+  
   # Effectively shifts start date for Date.parse() operations.
   #def DateUtils.shift_start_date(old_date, new_start_date)
     # Parsing a relative day (Sensitive to week, month, year)
