@@ -5,3 +5,4 @@
 * Parser can now correctly parse sentences like "meet me on the 10th"
 * Parser can now correctly parse XX/XX dates relative to a released date.
 * Now parses simple 'relative words' like "yesterday" and "today" correctly.
+* Many, many more functions are now released sensitive!
