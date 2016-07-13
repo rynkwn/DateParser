@@ -109,15 +109,15 @@ describe NaturalDateParsing do
       end
     end
     
-    context "Single year is correctly parsed" do
-      text = "In 1492 Columbus sailed the ocean blue."
-      released = nil
-      answer = [Date.parse("January 1, 1492")]
-      
-      it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
-      end
-    end
+    #context "Single year is correctly parsed" do
+    #  text = "In 1492 Columbus sailed the ocean blue."
+    #  released = nil
+    #  answer = [Date.parse("January 1, 1492")]
+    #  
+    #  it "correctly grabs the date" do
+    #    expect(NaturalDateParsing::interpret_date(text, released)).to eql(answer)
+    #  end
+    #end
     
     context "Correctly parses month and day in middle of sentence" do
       text = "Something something something march 4 something something"
