@@ -44,4 +44,8 @@ module DateUtils
     # Parsing a relative month (Sensitive to year)
     
   #end
+  
+  def DateUtils.default_date(year)
+    return Date.parse("Jan 1 " + year)
+  end
 end

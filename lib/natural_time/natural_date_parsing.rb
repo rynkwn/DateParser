@@ -88,7 +88,7 @@ module NaturalDateParsing
     return possible_dates
   end
   
-  def NaturalDateParsing.parse_one_word(word, released = nil)
+  def NaturalDateParsing.parse_one_word(word, released = nil, parse_single_years = false)
     # If the string is size 1, we assume it refers to a day of the week, or
     # something of the form XX/XX
     
@@ -137,8 +137,8 @@ module NaturalDateParsing
     end
     
     # In this case, we assume it's a year!
-    if Utils::is_int? word
-      return Date.parse("Jan 1," + word)
+    if parse_single_years && (Utils::is_int? word)
+      return DateUtils::default_date(word)
     end
   end
   
