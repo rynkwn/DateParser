@@ -26,7 +26,13 @@ module DateUtils
     diff_in_months = released.nil? ? 0 : (released.year * 12 + released.month) - 
                                          (Date.today.year * 12 + Date.today.month)
     
-    Date.parse(word) >> diff_in_months
+    
+    begin
+      return Date.parse(word) >> diff_in_months
+    rescue ArgumentError
+      ## If an ArgumentError arises, Date is not convinced it's a date.
+      return nil
+    end
   end
   
   # Parsing things like "March 4"
@@ -47,5 +53,16 @@ module DateUtils
   
   def DateUtils.default_date(year)
     return Date.parse("Jan 1 " + year)
+  end
+  
+  def DateUtils.suffix(number)
+    int = number.to_i
+    
+    ## Check to see if the least significant digit is 1.
+    if int & 1 == 1
+      return int.to_s + "st"
+    else
+      return int.to_s + "th"
+    end
   end
 end
