@@ -1,7 +1,7 @@
-require_relative 'natural_time/natural_date_parsing'
-require_relative 'natural_time/utils'
+require_relative 'date_parser/natural_date_parsing'
+require_relative 'date_parser/utils'
 
-module NaturalTime
+module DateParser
   
   # Public: Parse the text and return interpreted dates and times.
   #
@@ -11,7 +11,7 @@ module NaturalTime
   # Returns an array of Date
   # From a Daily Message, grab date in the natural message, if possible.
   # Otherwise, default to my provided date.
-  def NaturalTime.parse(txt, unique=false)
+  def DateParser.parse(txt, unique=false)
     txt = Utils::clean_str(txt)
     
     date_parse = Proc.new{|x| Date.parse(x)}

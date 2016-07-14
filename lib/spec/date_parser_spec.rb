@@ -1,7 +1,7 @@
-require_relative "../natural_time"
+require_relative "../date_parser"
 
 ## Run this file with this command:
-## rspec lib/spec/natural_time_spec.rb
+## rspec lib/spec/date_parser_spec.rb
 
 describe NaturalDateParsing do
   
