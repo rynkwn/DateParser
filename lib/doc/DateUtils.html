@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module DateUtils - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-default_month">::default_month</a>
+    
+    <li ><a href="#method-c-default_year">::default_year</a>
+    
+    <li ><a href="#method-c-difference_in_weeks">::difference_in_weeks</a>
+    
+    <li ><a href="#method-c-month_day">::month_day</a>
+    
+    <li ><a href="#method-c-numeric">::numeric</a>
+    
+    <li ><a href="#method-c-slash_date">::slash_date</a>
+    
+    <li ><a href="#method-c-suffix">::suffix</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-DateUtils">
+  <h1 id="module-DateUtils" class="module">
+    module DateUtils
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-default_month" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">default_month</span><span
+            class="method-args">(month, released = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>TODO. NOT SENSITIVE TO YEAR.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="default_month-source">
+            <pre><span class="ruby-comment"># File date_parser/date_utils.rb, line 59</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">DateUtils</span>.<span class="ruby-identifier">default_month</span>(<span class="ruby-identifier">month</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">this_year</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>.<span class="ruby-identifier">year</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">month</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">this_year</span>.<span class="ruby-identifier">to_s</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-default_year" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">default_year</span><span
+            class="method-args">(year)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>end</p>
+          
+          
+
+          
+          <div class="method-source-code" id="default_year-source">
+            <pre><span class="ruby-comment"># File date_parser/date_utils.rb, line 54</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">DateUtils</span>.<span class="ruby-identifier">default_year</span>(<span class="ruby-identifier">year</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-string">&quot;Jan 1 &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">year</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-difference_in_weeks" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">difference_in_weeks</span><span
+            class="method-args">(date1, date2)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Be careful with this. date1 is the later date.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="difference_in_weeks-source">
+            <pre><span class="ruby-comment"># File date_parser/date_utils.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">DateUtils</span>.<span class="ruby-identifier">difference_in_weeks</span>(<span class="ruby-identifier">date1</span>, <span class="ruby-identifier">date2</span>)
+  <span class="ruby-keyword">return</span> (((<span class="ruby-identifier">date1</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">date2</span>) <span class="ruby-operator">/</span> <span class="ruby-value">7</span>) <span class="ruby-operator">-</span> <span class="ruby-value">1</span>).<span class="ruby-identifier">to_i</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-month_day" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">month_day</span><span
+            class="method-args">(words, released = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parsing things like “March 4”</p>
+          
+          
+
+          
+          <div class="method-source-code" id="month_day-source">
+            <pre><span class="ruby-comment"># File date_parser/date_utils.rb, line 39</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">DateUtils</span>.<span class="ruby-identifier">month_day</span>(<span class="ruby-identifier">words</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">proposed_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">words</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot; &quot;</span>))
+  
+  <span class="ruby-identifier">diff_in_years</span> = <span class="ruby-identifier">released</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> (<span class="ruby-identifier">released</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">-</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>.<span class="ruby-identifier">year</span>)
+  
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">proposed_date</span> <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-identifier">diff_in_years</span> <span class="ruby-operator">*</span> <span class="ruby-value">12</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-numeric" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">numeric</span><span
+            class="method-args">(word, released = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>We parse a numeric date (1st, 2nd, 3rd, e.t.c.) given a release date</p>
+          
+          
+
+          
+          <div class="method-source-code" id="numeric-source">
+            <pre><span class="ruby-comment"># File date_parser/date_utils.rb, line 25</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">DateUtils</span>.<span class="ruby-identifier">numeric</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">diff_in_months</span> = <span class="ruby-identifier">released</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> (<span class="ruby-identifier">released</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">*</span> <span class="ruby-value">12</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">released</span>.<span class="ruby-identifier">month</span>) <span class="ruby-operator">-</span> 
+                                       (<span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">*</span> <span class="ruby-value">12</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>.<span class="ruby-identifier">month</span>)
+  
+  
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">word</span>) <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-identifier">diff_in_months</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span>
+    <span class="ruby-comment">## If an ArgumentError arises, Date is not convinced it&#39;s a date.</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-slash_date" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">slash_date</span><span
+            class="method-args">(word, released = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parse words of the form XX/XX</p>
+          
+          
+
+          
+          <div class="method-source-code" id="slash_date-source">
+            <pre><span class="ruby-comment"># File date_parser/date_utils.rb, line 3</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">DateUtils</span>.<span class="ruby-identifier">slash_date</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">samp</span> = <span class="ruby-identifier">word</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;/&#39;</span>)
+  <span class="ruby-identifier">month</span> = <span class="ruby-identifier">samp</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>
+  <span class="ruby-identifier">day</span> = <span class="ruby-identifier">samp</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">month</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">month</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">12</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">31</span>
+    <span class="ruby-comment"># TODO: IMPROVE EXCEPTION HANDLING.</span>
+    <span class="ruby-comment"># bolted exception handling.</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">proposed_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">word</span>)
+      <span class="ruby-keyword">if</span>(<span class="ruby-operator">!</span> <span class="ruby-identifier">released</span>.<span class="ruby-identifier">nil?</span>) <span class="ruby-comment">## We&#39;re sensitive to only years here.</span>
+        <span class="ruby-identifier">years_diff</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">released</span>.<span class="ruby-identifier">year</span>
+        <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">proposed_date</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-value">12</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">years_diff</span>)
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-identifier">proposed_date</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-suffix" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">suffix</span><span
+            class="method-args">(number)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="suffix-source">
+            <pre><span class="ruby-comment"># File date_parser/date_utils.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">DateUtils</span>.<span class="ruby-identifier">suffix</span>(<span class="ruby-identifier">number</span>)
+  <span class="ruby-identifier">int</span> = <span class="ruby-identifier">number</span>.<span class="ruby-identifier">to_i</span>
+  
+  <span class="ruby-comment">## Check to see if the least significant digit is 1.</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">int</span> <span class="ruby-operator">&amp;</span> <span class="ruby-value">1</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">int</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;st&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">int</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;th&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

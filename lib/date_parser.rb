@@ -13,8 +13,9 @@ module DateParser
   # Otherwise, default to my provided date.
   
   ## Maybe also want a default date?
+  
+  # 
   def DateParser.parse(txt, unique = false, default_date = nil)
-    txt = Utils::clean_str(txt)
     
     interpreted_dates = NaturalDateParsing::interpret_date(txt, Date.today)
     
@@ -30,8 +31,6 @@ module DateParser
   end
   
   def DateParser.get_first_date(text)
-    txt = Utils::clean_str(txt)
-    
-    interpreted_dates = NaturalDateParsing::interpret_date
+    return NaturalDateParsing::interpret_first_date(txt)
   end
 end
