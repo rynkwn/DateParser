@@ -80,6 +80,17 @@
 
   <section class="description">
     
+<p><a href="DateParser.html">DateParser</a> is the main interface between the
+user and the parser</p>
+
+<h2 id="module-DateParser-label-Methods">Methods<span><a href="#module-DateParser-label-Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>*parse(txt, options)*: Parse a block of text and return an array of the
+parsed dates as Date objects.</p>
+
+<p>*get_first_date(txt): Parse a block of text but stop and return the first
+parsed date found.</p>
+
   </section>
 
   
@@ -105,7 +116,7 @@
         
         <div class="method-heading">
           <span class="method-name">get_first_date</span><span
-            class="method-args">(text)</span>
+            class="method-args">(txt)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -120,8 +131,8 @@
 
           
           <div class="method-source-code" id="get_first_date-source">
-            <pre><span class="ruby-comment"># File date_parser.rb, line 33</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">DateParser</span>.<span class="ruby-identifier">get_first_date</span>(<span class="ruby-identifier">text</span>)
+            <pre><span class="ruby-comment"># File date_parser.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">DateParser</span>.<span class="ruby-identifier">get_first_date</span>(<span class="ruby-identifier">txt</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-constant">NaturalDateParsing</span><span class="ruby-operator">::</span><span class="ruby-identifier">interpret_first_date</span>(<span class="ruby-identifier">txt</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -147,13 +158,52 @@
 
         <div class="method-description">
           
-          
+          <p>Parses a text object and returns an array of parsed dates.</p>
+
+<h4 id="method-c-parse-label-Attributes">Attributes<span><a href="#method-c-parse-label-Attributes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p><code>txt</code> -</p>
+</li><li>
+<p><code>txt</code> -</p>
+</li><li>
+<p><code>txt</code> -</p>
+</li></ul>
+
+<h4 id="method-c-parse-label-Options">Options<span><a href="#method-c-parse-label-Options">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>You may which to break out options as a separate item since there maybe
+multiple items. Note options are prefixed with a colon, denoting them as a</p>
+<ul><li>
+<p><code>:conditions</code> - An SQL fragment like “administrator = 1”</p>
+</li><li>
+<p><code>:order</code> - An SQL fragment like “created_at DESC, name”.</p>
+</li><li>
+<p><code>:group</code> - An attribute name by which the result should be
+grouped</p>
+</li><li>
+<p><code>:limit</code> - An integer determining the limit on the number of
+rows that should be returned.</p>
+</li><li>
+<p><code>:offset</code> - An integer determining the offset from where the
+rows should be fetched.</p>
+</li><li>
+<p><code>:joins</code> - Either an SQL fragment for additional joins like
+“LEFT JOIN comments ON comments.post_id = id” (rarely needed)</p>
+</li></ul>
+
+<h4 id="method-c-parse-label-Examples">Examples<span><a href="#method-c-parse-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<p>Illustrate the behaviour of the method using examples. Indent examples:</p>
+
+<pre class="ruby"><span class="ruby-identifier">base</span> = <span class="ruby-constant">Base</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;Example String&quot;</span>)
+<span class="ruby-identifier">base</span>.<span class="ruby-identifier">method_name</span>(<span class="ruby-string">&quot;Example&quot;</span>, <span class="ruby-string">&quot;more&quot;</span>)
+</pre>
           
           
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File date_parser.rb, line 18</span>
+            <pre><span class="ruby-comment"># File date_parser.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-constant">DateParser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">unique</span> = <span class="ruby-keyword">false</span>, <span class="ruby-identifier">default_date</span> = <span class="ruby-keyword">nil</span>)
   
   <span class="ruby-identifier">interpreted_dates</span> = <span class="ruby-constant">NaturalDateParsing</span><span class="ruby-operator">::</span><span class="ruby-identifier">interpret_date</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>)
