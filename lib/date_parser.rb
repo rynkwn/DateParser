@@ -11,30 +11,27 @@ module DateParser
   # Returns an array of Date
   # From a Daily Message, grab date in the natural message, if possible.
   # Otherwise, default to my provided date.
-  def DateParser.parse(txt, unique=false)
+  
+  ## Maybe also want a default date?
+  def DateParser.parse(txt, unique = false, default_date = nil)
     txt = Utils::clean_str(txt)
     
-    date_parse = Proc.new{|x| Date.parse(x)}
-    
-    interpreted_dates = NaturalDateParsing::interpret_Date(txt, Date.today)
+    interpreted_dates = NaturalDateParsing::interpret_date(txt, Date.today)
     
     if unique
       interpreted_dates.uniq!
     end
     
+    if interpreted_dates.nil?
+      interpreted_dates = default_date
+    end
     
-    #if !contemporary_date.nil?
-      #possible_dates =  dm_interpret_date(msg, contemporary_date, true)
-      #last_mentioned_date = possible_dates.last
-      #if(last_mentioned_date.nil?)
-        #return contemporary_date
-      #else
-        #return last_mentioned_date
-      #end
-    #end
-    
-    # We return this iff it's not a normally formatted message. In which case
-    # it's most likely a category. I.e., === SOMETHING ===
     return interpreted_dates
+  end
+  
+  def DateParser.get_first_date(text)
+    txt = Utils::clean_str(txt)
+    
+    interpreted_dates = NaturalDateParsing::interpret_date
   end
 end

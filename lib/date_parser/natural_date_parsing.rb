@@ -102,9 +102,13 @@ module NaturalDateParsing
       if(! released.nil?)
         # If the tentative_day is less than the current day, we assume it takes
         # place next week.
-        days_in_week = 7
-        proposed_date = (tentative_day < released.day) ? proposed_date + days_in_week :
-                                                         proposed_date
+        weeks_to_shift = DateUtils::difference_in_weeks(Date.today, released)
+        
+        #days_in_week = 7
+        #proposed_date = (tentative_day < released.day) ? proposed_date + days_in_week :
+                                                         #proposed_date
+                                                         
+        proposed_date = proposed_date - (weeks_to_shift * 7)
         
         return proposed_date
       end

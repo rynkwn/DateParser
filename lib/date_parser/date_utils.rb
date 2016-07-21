@@ -71,4 +71,10 @@ module DateUtils
       return int.to_s + "th"
     end
   end
+  
+  ## Be careful with this.
+  ## date1 is the later date.
+  def DateUtils.difference_in_weeks(date1, date2)
+    return (((date1 - date2) / 7) - 1).to_i
+  end
 end
