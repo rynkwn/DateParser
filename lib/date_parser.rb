@@ -36,6 +36,10 @@ module DateParser
   #        #=> [#<Date: 2018-01-01 ((2458120j,0s,0n),+0s,2299161j)>, 
   #             #<Date: 2016-07-11 ((2457581j,0s,0n),+0s,2299161j)>]
   #
+  #    ######################################
+  #    ##
+  #    ## Option Examples:
+  #    ##
   #
   #    text = "Sunday, Sunday, Sunday!"
   #    DateParser::parse(text, nil, unique: false)
@@ -43,12 +47,18 @@ module DateParser
   #             #<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>, 
   #             #<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>]
   #
-  #    DateParse::parse(text, nil unique: true)
+  #    DateParser::parse(text, nil unique: true)
   #        #=> [#<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>]
+  #
+  #    DateParser::parse("No dates here", nil)
+  #        #=> []
+  #
+  #    DateParser::parse("No dates here", nil, nil_date: Date.parse("Jan 1 2012"))
+  #        #=> [#<Date: 2012-01-01 ((2455928j,0s,0n),+0s,2299161j)>]
   #
   def DateParser.parse(txt, creation_date = nil, opts = {})
     unique = opts[:unique] || false
-    nil_date = opts[:default_date] || nil
+    nil_date = opts[:nil_date] || nil
     
     interpreted_dates = NaturalDateParsing::interpret_date(txt, Date.today)
     
@@ -56,8 +66,8 @@ module DateParser
       interpreted_dates.uniq!
     end
     
-    if interpreted_dates.nil?
-      interpreted_dates = default_date
+    if interpreted_dates.empty?
+      interpreted_dates = [nil_date].flatten
     end
     
     return interpreted_dates
