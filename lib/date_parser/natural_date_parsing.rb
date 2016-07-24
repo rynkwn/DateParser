@@ -319,7 +319,41 @@ module NaturalDateParsing
     return output
   end
   
+  # word is of the form XXXX-XX-XX, DD-MM-YYYY or MM-DD-YYYY
   def NaturalDateParsing.full_numeric_date(word)
+    subparts = word.split("-")
+    
+    # This is a weak check to see where the year is
+    year_index = (subparts[0].to_i).abs > 31 ? 0 : 2
+    
+    # Then we assume it's of the form YYYY-MM-DD
+    if year_index == 0
+      return Date.parse(word)
+    else
+      # We check the subparts to try to see which part is DD.
+      # If we can't determine it, we assume it's International Standard Format,
+      # or DD-MM-YY
+      
+      if subparts[1].to_i > 12
+        # American Standard (MM-DD-YYYY)
+        subparts[0] = month_to_string(subparts[0].to_i)
+        return Date.parse(subparts.join(" "))
+        
+      else
+        # International Standard (DD-MM-YYYY)
+        return Date.parse(word)
+      end
+    end
+    
     return Date.parse(word)
   end
+  
+  def NaturalDateParsing.month_to_string(numeric)
+    months = ["january", "february", "march", "april", "june",
+              "july", "august", "september", "october", "november",
+              "december"]
+              
+    return months[numeric - 1]
+  end
+  
 end
