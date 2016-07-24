@@ -43,6 +43,11 @@ require_relative "utils"
 
 module NaturalDateParsing
   
+  ###############################################
+  ##
+  ## Constants
+  ##
+  
   SINGLE_DAYS = [
                  'mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun',
                  'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 
@@ -68,13 +73,37 @@ module NaturalDateParsing
                            '26th', '27th', '28th', '29th', '30th', '31st'
                          ]
   
+  ###############################################
+  ##
+  ## Main Parsing/Processing Function
+  ##
   
-  
-  # Gets an array of possible dates for a message
-  # @param creation_date is the date the message was initially sent out.
-  # @param unique is a flag that signals whether we want to return unique dates only
-  # @param parse_single_years a flag to signal whether we should parse for single years.
-  def NaturalDateParsing.interpret_date(txt, creation_date = nil, parse_single_years = false)
+  # Processes a given text and returns an array of probable dates contained within.
+  #
+  # ==== Attributes
+  #
+  # * +txt+ - The text to parse.
+  # * +creation_date+ - A Date object of when the text was created or released. 
+  # Defaults to nil, but if provided can make returned dates more accurate.
+  # * +parse_single_years+ - A boolean. If true, we interpret single numbers as
+  # years. This is a very broad assumption, and so defaults to false.
+  #
+  # ==== Examples
+  #
+  #    text = "Henry and Hanke created a calendar that causes each day to fall " +
+  #           "on the same day of the week every year. They recommend its " +
+  #           "implementation on January 1, 2018, a Monday."
+  #    creation_date = Date.parse("July 6, 2016")
+  #
+  #    DateParser::parse(text, creation_date)
+  #        #=> [#<Date: 2018-01-01 ((2458120j,0s,0n),+0s,2299161j)>, 
+  #             #<Date: 2016-07-11 ((2457581j,0s,0n),+0s,2299161j)>]
+  #
+  def NaturalDateParsing.interpret_date(
+                                        txt, 
+                                        creation_date = nil, 
+                                        parse_single_years = false
+                                        )
     possible_dates = []
     txt = Utils::clean_str(txt)
     words = txt.split(" ").map{|x| x.strip}
@@ -133,9 +162,18 @@ module NaturalDateParsing
     return possible_dates
   end
   
-  def NaturalDateParsing.parse_one_word(word, creation_date = nil, parse_single_years = false)
-    # If the string is size 1, we assume it refers to a day of the week, or
-    # something of the form XX/XX
+  
+  ###############################################
+  ##
+  ## Parse Cases (1 word, 2 words, 3 words)
+  ##
+  
+  def NaturalDateParsing.parse_one_word(
+                                        word, 
+                                        creation_date = nil, 
+                                        parse_single_years = false
+                                        )
+    
     if SINGLE_DAYS.include? word
       proposed_date = Date.parse(word)
       tentative_day = proposed_date.day
@@ -204,25 +242,27 @@ module NaturalDateParsing
   
   # Now we assume it refers to a month day, or MON ## combination.
   def NaturalDateParsing.parse_two_words(words, creation_date = nil)
+    
     if MONTH.include?(words[0]) && _weak_day?(words[1])
       return month_day(words, creation_date)
     end
+    
   end
   
   
   ## We assume it's the following format: MONTH NUM, YEAR
   def NaturalDateParsing.parse_three_words(words, creation_date = nil)
+    
     if MONTH.include?(words[0]) && _weak_day?(words[1]) && Utils::is_int?(words[2])
       return Date.parse(words.join(" "))
     end
+    
   end
   
-  
-  private
-  
-  def NaturalDateParsing._weak_day?(word)
-    return (NUMERIC_DAY.include? word) || (SUFFIXED_NUMERIC_DAY.include? word)
-  end
+  ###############################################
+  ##
+  ## Parse Functions
+  ##
   
   # Parse words of the form XX/XX
   def NaturalDateParsing.slash_date(word, released = nil)
@@ -246,20 +286,6 @@ module NaturalDateParsing
     end
   end
   
-  # We parse a numeric date (1st, 2nd, 3rd, e.t.c.) given a release date
-  def NaturalDateParsing.numeric(word, released = nil)
-    diff_in_months = released.nil? ? 0 : (released.year * 12 + released.month) - 
-                                         (Date.today.year * 12 + Date.today.month)
-    
-    
-    begin
-      return Date.parse(word) >> diff_in_months
-    rescue ArgumentError
-      ## If an ArgumentError arises, Date is not convinced it's a date.
-      return nil
-    end
-  end
-  
   # Parsing things like "March 4"
   def NaturalDateParsing.month_day(words, released = nil)
     proposed_date = Date.parse(words.join(" "))
@@ -269,12 +295,53 @@ module NaturalDateParsing
     return proposed_date >> diff_in_years * 12
   end
   
-  # Effectively shifts start date for Date.parse() operations.
-  #def DateUtils.shift_start_date(old_date, new_start_date)
-    # Parsing a relative day (Sensitive to week, month, year)
-    # Parsing a relative month (Sensitive to year)
+  # We parse a numeric date (1st, 2nd, 3rd, e.t.c.) given a release date
+  def NaturalDateParsing.numeric(word, released = nil)
+    diff_in_months = released.nil? ? 0 : (released.year * 12 + released.month) - 
+                                         (Date.today.year * 12 + Date.today.month)
     
-  #end
+    begin
+      return Date.parse(word) >> diff_in_months
+    rescue ArgumentError
+      ## If an ArgumentError arises, Date is not convinced it's a date.
+      return nil
+    end
+  end
+  
+  # word is of the form XXXX-XX-XX, DD-MM-YYYY or MM-DD-YYYY
+  def NaturalDateParsing.full_numeric_date(word)
+    subparts = word.split("-")
+    
+    # This is a weak check to see where the year is
+    year_index = (subparts[0].to_i).abs > 31 ? 0 : 2
+    
+    # Then we assume it's of the form YYYY-MM-DD
+    if year_index == 0
+      return Date.parse(word)
+    else
+      # We check the subparts to try to see which part is DD.
+      # If we can't determine it, we assume it's International Standard Format,
+      # or DD-MM-YY
+      
+      if subparts[1].to_i > 12
+        # American Standard (MM-DD-YYYY)
+        subparts[0] = numeric_month_to_string(subparts[0].to_i)
+        return Date.parse(subparts.join(" "))
+        
+      else
+        # International Standard (DD-MM-YYYY)
+        return Date.parse(word)
+      end
+    end
+    
+    return Date.parse(word)
+  end
+  
+  private
+  
+  def NaturalDateParsing._weak_day?(word)
+    return (NUMERIC_DAY.include? word) || (SUFFIXED_NUMERIC_DAY.include? word)
+  end
   
   def NaturalDateParsing.default_year(year)
     return Date.parse("Jan 1 " + year)
@@ -317,35 +384,6 @@ module NaturalDateParsing
     end
     
     return output
-  end
-  
-  # word is of the form XXXX-XX-XX, DD-MM-YYYY or MM-DD-YYYY
-  def NaturalDateParsing.full_numeric_date(word)
-    subparts = word.split("-")
-    
-    # This is a weak check to see where the year is
-    year_index = (subparts[0].to_i).abs > 31 ? 0 : 2
-    
-    # Then we assume it's of the form YYYY-MM-DD
-    if year_index == 0
-      return Date.parse(word)
-    else
-      # We check the subparts to try to see which part is DD.
-      # If we can't determine it, we assume it's International Standard Format,
-      # or DD-MM-YY
-      
-      if subparts[1].to_i > 12
-        # American Standard (MM-DD-YYYY)
-        subparts[0] = numeric_month_to_string(subparts[0].to_i)
-        return Date.parse(subparts.join(" "))
-        
-      else
-        # International Standard (DD-MM-YYYY)
-        return Date.parse(word)
-      end
-    end
-    
-    return Date.parse(word)
   end
   
   def NaturalDateParsing.numeric_month_to_string(numeric)
