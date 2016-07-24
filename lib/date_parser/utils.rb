@@ -2,7 +2,20 @@ module Utils
   
   # Determine whether or not a String is a base 10 integer.
   def Utils.is_int?(str)
-    str.to_i.to_s == str
+    str.to_i.to_s == str || strong_is_int?(str)
+  end
+  
+  # A more rigorous check to see if the String is an int.
+  def Utils.strong_is_int?(str)
+    nums = ("0".."9").to_a
+    
+    for char in str.each_char do
+      if ! nums.include? char
+        return false
+      end
+    end
+    
+    return true
   end
   
   # Removes punctuation.

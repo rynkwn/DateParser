@@ -58,7 +58,7 @@ module NaturalDateParsing
            'october', 'november', 'december'
           ]
           
-  NUMERIC_DAY = [('1'..'31').to_a].flatten
+  NUMERIC_DAY = ('1'..'31').to_a
                 
   SUFFIXED_NUMERIC_DAY = [
                            '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', 
@@ -136,7 +136,6 @@ module NaturalDateParsing
   def NaturalDateParsing.parse_one_word(word, creation_date = nil, parse_single_years = false)
     # If the string is size 1, we assume it refers to a day of the week, or
     # something of the form XX/XX
-    
     if SINGLE_DAYS.include? word
       proposed_date = Date.parse(word)
       tentative_day = proposed_date.day
@@ -145,7 +144,7 @@ module NaturalDateParsing
       if(! creation_date.nil?)
         # If the tentative_day is less than the current day, we assume it takes
         # place next week.
-        weeks_to_shift = DateUtils::difference_in_weeks(Date.today, creation_date)
+        weeks_to_shift = difference_in_weeks(Date.today, creation_date)
                                                          
         proposed_date = proposed_date - (weeks_to_shift * 7)
         
@@ -181,20 +180,24 @@ module NaturalDateParsing
     
     if word.include? '/'
       # In this case, we assume the string is of the form XX/XX
-      return DateUtils::slash_date(word, creation_date)
+      return slash_date(word, creation_date)
     end
     
     if SUFFIXED_NUMERIC_DAY.include? word
-      return DateUtils::numeric(word, creation_date)
+      return numeric(word, creation_date)
     end
     
     if MONTH.include? word
-      return DateUtils::default_month(word, creation_date)
+      return default_month(word, creation_date)
     end
     
     # In this case, we assume it's a year!
     if parse_single_years && (Utils::is_int? word)
-      return DateUtils::default_year(word)
+      return default_year(word)
+    end
+    
+    if full_numeric_date?(word)
+      return full_numeric_date(word)
     end
   end
   
@@ -202,7 +205,7 @@ module NaturalDateParsing
   # Now we assume it refers to a month day, or MON ## combination.
   def NaturalDateParsing.parse_two_words(words, creation_date = nil)
     if MONTH.include?(words[0]) && _weak_day?(words[1])
-      return DateUtils::month_day(words, creation_date)
+      return month_day(words, creation_date)
     end
   end
   
@@ -219,5 +222,104 @@ module NaturalDateParsing
   
   def NaturalDateParsing._weak_day?(word)
     return (NUMERIC_DAY.include? word) || (SUFFIXED_NUMERIC_DAY.include? word)
+  end
+  
+  # Parse words of the form XX/XX
+  def NaturalDateParsing.slash_date(word, released = nil)
+    samp = word.split('/')
+    month = samp[0].to_i
+    day = samp[1].to_i
+    
+    if month > 0 && month <= 12 && day > 0 && day <= 31
+      # TODO: IMPROVE EXCEPTION HANDLING.
+      # bolted exception handling.
+      begin
+        proposed_date = Date.parse(word)
+        if(! released.nil?) ## We're sensitive to only years here.
+          years_diff = Date.today.year - released.year
+          proposed_date = proposed_date << (12 * years_diff)
+        end
+        return proposed_date
+      rescue ArgumentError
+        return nil
+      end
+    end
+  end
+  
+  # We parse a numeric date (1st, 2nd, 3rd, e.t.c.) given a release date
+  def NaturalDateParsing.numeric(word, released = nil)
+    diff_in_months = released.nil? ? 0 : (released.year * 12 + released.month) - 
+                                         (Date.today.year * 12 + Date.today.month)
+    
+    
+    begin
+      return Date.parse(word) >> diff_in_months
+    rescue ArgumentError
+      ## If an ArgumentError arises, Date is not convinced it's a date.
+      return nil
+    end
+  end
+  
+  # Parsing things like "March 4"
+  def NaturalDateParsing.month_day(words, released = nil)
+    proposed_date = Date.parse(words.join(" "))
+    
+    diff_in_years = released.nil? ? 0 : (released.year - Date.today.year)
+    
+    return proposed_date >> diff_in_years * 12
+  end
+  
+  # Effectively shifts start date for Date.parse() operations.
+  #def DateUtils.shift_start_date(old_date, new_start_date)
+    # Parsing a relative day (Sensitive to week, month, year)
+    # Parsing a relative month (Sensitive to year)
+    
+  #end
+  
+  def NaturalDateParsing.default_year(year)
+    return Date.parse("Jan 1 " + year)
+  end
+  
+  ## TODO. NOT SENSITIVE TO YEAR.
+  def NaturalDateParsing.default_month(month, released = nil)
+    this_year = Date.today.year
+    return Date.parse(month + " " + this_year.to_s)
+  end
+  
+  def NaturalDateParsing.suffix(number)
+    int = number.to_i
+    
+    ## Check to see if the least significant digit is 1.
+    if int & 1 == 1
+      return int.to_s + "st"
+    else
+      return int.to_s + "th"
+    end
+  end
+  
+  ## Be careful with this.
+  ## date1 is the later date.
+  def NaturalDateParsing.difference_in_weeks(date1, date2)
+    return ((date1 - date2) / 7).to_i
+  end
+  
+  # Is it of the form XXXX-XX-XX?
+  def NaturalDateParsing.full_numeric_date?(word)
+    output = true
+    
+    if word.include? "-"
+      substrings = word.split("-")
+      for substring in substrings do
+        output = output && Utils.is_int?(substring)
+      end
+    else
+      output = false
+    end
+    
+    return output
+  end
+  
+  def NaturalDateParsing.full_numeric_date(word)
+    return Date.parse(word)
   end
 end
