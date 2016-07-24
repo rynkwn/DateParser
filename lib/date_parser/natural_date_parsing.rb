@@ -222,7 +222,7 @@ module NaturalDateParsing
     end
     
     if SUFFIXED_NUMERIC_DAY.include? word
-      return numeric(word, creation_date)
+      return numeric_single_day(word, creation_date)
     end
     
     if MONTH.include? word
@@ -296,7 +296,7 @@ module NaturalDateParsing
   end
   
   # We parse a numeric date (1st, 2nd, 3rd, e.t.c.) given a release date
-  def NaturalDateParsing.numeric(word, released = nil)
+  def NaturalDateParsing.numeric_single_day(word, released = nil)
     diff_in_months = released.nil? ? 0 : (released.year * 12 + released.month) - 
                                          (Date.today.year * 12 + Date.today.month)
     
@@ -349,7 +349,7 @@ module NaturalDateParsing
   
   ## TODO. NOT SENSITIVE TO YEAR.
   def NaturalDateParsing.default_month(month, released = nil)
-    this_year = Date.today.year
+    this_year = released.nil? ? Date.today.year : released.year
     return Date.parse(month + " " + this_year.to_s)
   end
   
