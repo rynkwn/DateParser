@@ -17,8 +17,9 @@ module Utils
   
   # Performs delete_at for a range of integers
   def Utils.delete_at_indices(array, range)
+    first_val = range.first
     for i in range do
-      array.delete_at(i)
+      array.delete_at(first_val)
     end
     
     return array
