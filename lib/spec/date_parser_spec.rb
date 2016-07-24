@@ -261,3 +261,23 @@ describe NaturalDateParsing do
     
   end
 end
+
+
+describe DateParser do
+  
+  #########################################################
+  ##
+  ## More Edge Cases looking at specific features.
+  ##
+  
+  describe ".parse" do
+    context "Parse international standard date" do
+      text = "2012-02-12"
+      answer = [Date.parse("2012-02-12")]
+      
+      it "correctly grabs the date" do
+        expect(DateParser::parse(text)).to eql(answer)
+      end
+    end
+  end
+end

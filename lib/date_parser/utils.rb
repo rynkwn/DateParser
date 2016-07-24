@@ -7,7 +7,7 @@ module Utils
   
   # Removes punctuation.
   def Utils.clean_out_punctuation(str)
-    str.gsub(/[^a-z0-9\s\/]/i, '')
+    str.gsub(/[^a-z0-9\s\/-]/i, '')
   end
   
   # Removes punctuation and downcases the str.

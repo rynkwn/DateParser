@@ -24,6 +24,7 @@ module DateParser
   #
   # * +:unique+ - Return only unique Date objects. Defaults to false
   # * +:nil_date+ - A date to return if no dates are parsed. Defaults to nil.
+  # * +:parse_single_years+ - Should we parse single ints as years? Defaults to false.
   #
   # ==== Examples
   #
@@ -59,8 +60,11 @@ module DateParser
   def DateParser.parse(txt, creation_date = nil, opts = {})
     unique = opts[:unique] || false
     nil_date = opts[:nil_date] || nil
+    parse_single_years = opts[:parse_single_years] || false
     
-    interpreted_dates = NaturalDateParsing::interpret_date(txt, Date.today)
+    interpreted_dates = NaturalDateParsing::interpret_date(txt, 
+                                                           creation_date, 
+                                                           parse_single_years)
     
     if unique
       interpreted_dates.uniq!
