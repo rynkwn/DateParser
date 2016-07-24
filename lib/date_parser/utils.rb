@@ -14,4 +14,13 @@ module Utils
   def Utils.clean_str(str)
     clean_out_punctuation(str).downcase
   end
+  
+  # Performs delete_at for a range of integers
+  def Utils.delete_at_indices(array, range)
+    for i in range do
+      array.delete_at(i)
+    end
+    
+    return array
+  end
 end

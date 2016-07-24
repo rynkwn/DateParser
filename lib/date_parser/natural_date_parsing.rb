@@ -52,7 +52,8 @@ module NaturalDateParsing
       
       if(! proposed_date.nil?)
         possible_dates << proposed_date
-        words = words - subset_words
+        words = Utils::delete_at_indices(words, i..(i+2))
+        i -= 1
       end
       
       i += 1
@@ -66,7 +67,8 @@ module NaturalDateParsing
       
       if(! proposed_date.nil?)
         possible_dates << proposed_date
-        words = words - subset_words
+        words = Utils::delete_at_indices(words, i..(i+1))
+        i -= 1
       end
       
       i += 1
@@ -81,7 +83,8 @@ module NaturalDateParsing
       
       if(! proposed_date.nil?)
         possible_dates << proposed_date
-        words = words - [subset_words]
+        words.delete_at(i)
+        i -= 1
       end
       
       i += 1
@@ -89,55 +92,6 @@ module NaturalDateParsing
     
     return possible_dates
   end
-  
-  def NaturalDateParsing.interpret_first_date(text, released = nil, parse_single_years = false)
-    text = Utils::clean_str(text)
-    words = text.split(" ").map{|x| x.strip}
-    
-    i = 0
-    
-    while (i <= words.length - 3) do
-      subset_words = words[i..(i+2)]
-      
-      proposed_date = parse_three_words(subset_words, released)
-      
-      if(! proposed_date.nil?)
-        return proposed_date
-      end
-      
-      i += 1
-    end
-    
-    i = 0
-    
-    while (i <= words.length - 2) do
-      subset_words = words[i..(i+1)]
-      proposed_date = parse_two_words(subset_words, released)
-      
-      if(! proposed_date.nil?)
-        return proposed_date
-      end
-      
-      i += 1
-    end
-    
-    i = 0
-    
-    while (i <= words.length - 1) do
-      subset_words = words[i]
-      
-      proposed_date = parse_one_word(subset_words, released, parse_single_years)
-      
-      if(! proposed_date.nil?)
-        return proposed_date
-      end
-      
-      i += 1
-    end
-    
-    return nil
-  end
-  
   
   def NaturalDateParsing.parse_one_word(word, released = nil, parse_single_years = false)
     # If the string is size 1, we assume it refers to a day of the week, or

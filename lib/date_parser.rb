@@ -1,6 +1,6 @@
-require_relative 'date_parser/natural_date_parsing'
-require_relative 'date_parser/utils'
+require 'date'
 
+require_relative 'date_parser/natural_date_parsing'
 
 # DateParser is the main interface between the user and the parser
 #
@@ -35,6 +35,16 @@ module DateParser
   #    DateParser::parse(text, creation_date)
   #        #=> [#<Date: 2018-01-01 ((2458120j,0s,0n),+0s,2299161j)>, 
   #             #<Date: 2016-07-11 ((2457581j,0s,0n),+0s,2299161j)>]
+  #
+  #
+  #    text = "Sunday, Sunday, Sunday!"
+  #    DateParser::parse(text, nil, unique: false)
+  #        #=> [#<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>, 
+  #             #<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>, 
+  #             #<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>]
+  #
+  #    DateParse::parse(text, nil unique: true)
+  #        #=> [#<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>]
   #
   def DateParser.parse(txt, creation_date = nil, opts = {})
     unique = opts[:unique] || false
