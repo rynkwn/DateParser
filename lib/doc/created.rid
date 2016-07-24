@@ -1,6 +1,6 @@
-Thu, 21 Jul 2016 01:58:50 +0000
-./spec/date_parser_spec.rb	Thu, 21 Jul 2016 01:27:53 +0000
-./date_parser/date_utils.rb	Thu, 21 Jul 2016 01:35:10 +0000
-./date_parser/utils.rb	Thu, 14 Jul 2016 01:09:48 +0000
-./date_parser/natural_date_parsing.rb	Thu, 21 Jul 2016 01:43:25 +0000
-./date_parser.rb	Thu, 21 Jul 2016 01:57:58 +0000
+Sun, 24 Jul 2016 17:12:08 +0000
+./spec/date_parser_spec.rb	Sun, 24 Jul 2016 02:59:34 +0000
+./date_parser/date_utils.rb	Sun, 24 Jul 2016 02:46:50 +0000
+./date_parser/utils.rb	Sun, 24 Jul 2016 03:20:07 +0000
+./date_parser/natural_date_parsing.rb	Sun, 24 Jul 2016 03:22:09 +0000
+./date_parser.rb	Sun, 24 Jul 2016 03:29:18 +0000

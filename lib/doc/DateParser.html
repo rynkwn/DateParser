@@ -63,8 +63,6 @@
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-c-get_first_date">::get_first_date</a>
-    
     <li ><a href="#method-c-parse">::parse</a>
     
   </ul>
@@ -88,9 +86,6 @@ user and the parser</p>
 <p>*parse(txt, options)*: Parse a block of text and return an array of the
 parsed dates as Date objects.</p>
 
-<p>*get_first_date(txt): Parse a block of text but stop and return the first
-parsed date found.</p>
-
   </section>
 
   
@@ -112,44 +107,11 @@ parsed date found.</p>
        </header>
 
     
-      <div id="method-c-get_first_date" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">get_first_date</span><span
-            class="method-args">(txt)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="get_first_date-source">
-            <pre><span class="ruby-comment"># File date_parser.rb, line 73</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">DateParser</span>.<span class="ruby-identifier">get_first_date</span>(<span class="ruby-identifier">txt</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-constant">NaturalDateParsing</span><span class="ruby-operator">::</span><span class="ruby-identifier">interpret_first_date</span>(<span class="ruby-identifier">txt</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
       <div id="method-c-parse" class="method-detail ">
         
         <div class="method-heading">
           <span class="method-name">parse</span><span
-            class="method-args">(txt, unique = false, default_date = nil)</span>
+            class="method-args">(txt, creation_date = nil, opts = {})</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -162,49 +124,61 @@ parsed date found.</p>
 
 <h4 id="method-c-parse-label-Attributes">Attributes<span><a href="#method-c-parse-label-Attributes">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p><code>txt</code> -</p>
+<p><code>txt</code> - The text to parse.</p>
 </li><li>
-<p><code>txt</code> -</p>
-</li><li>
-<p><code>txt</code> -</p>
+<p><code>creation_date</code> - A Date object of when the text was created or
+released.</p>
 </li></ul>
 
-<h4 id="method-c-parse-label-Options">Options<span><a href="#method-c-parse-label-Options">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<p>Defaults to nil, but if provided can make returned dates more accurate.</p>
 
-<p>You may which to break out options as a separate item since there maybe
-multiple items. Note options are prefixed with a colon, denoting them as a</p>
+<h4 id="method-c-parse-label-Options">Options<span><a href="#method-c-parse-label-Options">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p><code>:conditions</code> - An SQL fragment like “administrator = 1”</p>
+<p><code>:unique</code> - Return only unique Date objects. Defaults to false</p>
 </li><li>
-<p><code>:order</code> - An SQL fragment like “created_at DESC, name”.</p>
-</li><li>
-<p><code>:group</code> - An attribute name by which the result should be
-grouped</p>
-</li><li>
-<p><code>:limit</code> - An integer determining the limit on the number of
-rows that should be returned.</p>
-</li><li>
-<p><code>:offset</code> - An integer determining the offset from where the
-rows should be fetched.</p>
-</li><li>
-<p><code>:joins</code> - Either an SQL fragment for additional joins like
-“LEFT JOIN comments ON comments.post_id = id” (rarely needed)</p>
+<p><code>:nil_date</code> - A date to return if no dates are parsed. Defaults
+to nil.</p>
 </li></ul>
 
 <h4 id="method-c-parse-label-Examples">Examples<span><a href="#method-c-parse-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h4>
 
-<p>Illustrate the behaviour of the method using examples. Indent examples:</p>
+<pre>text = &quot;Henry and Hanke created a calendar that causes each day to fall &quot; +
+       &quot;on the same day of the week every year. They recommend its &quot; +
+       &quot;implementation on January 1, 2018, a Monday.&quot;
+creation_date = Date.parse(&quot;July 6, 2016&quot;)
 
-<pre class="ruby"><span class="ruby-identifier">base</span> = <span class="ruby-constant">Base</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;Example String&quot;</span>)
-<span class="ruby-identifier">base</span>.<span class="ruby-identifier">method_name</span>(<span class="ruby-string">&quot;Example&quot;</span>, <span class="ruby-string">&quot;more&quot;</span>)
-</pre>
+DateParser::parse(text, creation_date)
+    #=&gt; [#&lt;Date: 2018-01-01 ((2458120j,0s,0n),+0s,2299161j)&gt;, 
+         #&lt;Date: 2016-07-11 ((2457581j,0s,0n),+0s,2299161j)&gt;]
+
+######################################
+##
+## Option Examples:
+##
+
+text = &quot;Sunday, Sunday, Sunday!&quot;
+DateParser::parse(text, nil, unique: false)
+    #=&gt; [#&lt;Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)&gt;, 
+         #&lt;Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)&gt;, 
+         #&lt;Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)&gt;]
+
+DateParser::parse(text, nil unique: true)
+    #=&gt; [#&lt;Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)&gt;]
+
+DateParser::parse(&quot;No dates here&quot;, nil)
+    #=&gt; []
+
+DateParser::parse(&quot;No dates here&quot;, nil, nil_date: Date.parse(&quot;Jan 1 2012&quot;))
+    #=&gt; [#&lt;Date: 2012-01-01 ((2455928j,0s,0n),+0s,2299161j)&gt;]</pre>
           
           
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File date_parser.rb, line 58</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">DateParser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">unique</span> = <span class="ruby-keyword">false</span>, <span class="ruby-identifier">default_date</span> = <span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File date_parser.rb, line 59</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">DateParser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">creation_date</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">opts</span> = {})
+  <span class="ruby-identifier">unique</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:unique</span>] <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">nil_date</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:nil_date</span>] <span class="ruby-operator">||</span> <span class="ruby-keyword">nil</span>
   
   <span class="ruby-identifier">interpreted_dates</span> = <span class="ruby-constant">NaturalDateParsing</span><span class="ruby-operator">::</span><span class="ruby-identifier">interpret_date</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>)
   
@@ -212,8 +186,8 @@ rows should be fetched.</p>
     <span class="ruby-identifier">interpreted_dates</span>.<span class="ruby-identifier">uniq!</span>
   <span class="ruby-keyword">end</span>
   
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">interpreted_dates</span>.<span class="ruby-identifier">nil?</span>
-    <span class="ruby-identifier">interpreted_dates</span> = <span class="ruby-identifier">default_date</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">interpreted_dates</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">interpreted_dates</span> = [<span class="ruby-identifier">nil_date</span>].<span class="ruby-identifier">flatten</span>
   <span class="ruby-keyword">end</span>
   
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">interpreted_dates</span>
