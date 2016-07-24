@@ -152,12 +152,15 @@ module NaturalDateParsing
         # If the tentative_day is less than the current day, we assume it takes
         # place next week.
         weeks_to_shift = DateUtils::difference_in_weeks(Date.today, released)
-        
-        #days_in_week = 7
-        #proposed_date = (tentative_day < released.day) ? proposed_date + days_in_week :
-                                                         #proposed_date
                                                          
         proposed_date = proposed_date - (weeks_to_shift * 7)
+        
+        # Right now though, it should be within 1 week of accuracy, and always 
+        # one week ahead. The solution is pretty simple. If the proposed date 
+        # is more than a week ahead of the creation date, then go back one week.
+        if proposed_date - released > 7
+          proposed_date = proposed_date - 7
+        end
         
         return proposed_date
       end
