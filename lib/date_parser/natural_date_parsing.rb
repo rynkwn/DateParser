@@ -336,7 +336,7 @@ module NaturalDateParsing
       
       if subparts[1].to_i > 12
         # American Standard (MM-DD-YYYY)
-        subparts[0] = month_to_string(subparts[0].to_i)
+        subparts[0] = numeric_month_to_string(subparts[0].to_i)
         return Date.parse(subparts.join(" "))
         
       else
@@ -348,7 +348,7 @@ module NaturalDateParsing
     return Date.parse(word)
   end
   
-  def NaturalDateParsing.month_to_string(numeric)
+  def NaturalDateParsing.numeric_month_to_string(numeric)
     months = ["january", "february", "march", "april", "may", "june",
               "july", "august", "september", "october", "november",
               "december"]
