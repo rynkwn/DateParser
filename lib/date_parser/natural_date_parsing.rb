@@ -349,10 +349,10 @@ module NaturalDateParsing
   end
   
   def NaturalDateParsing.month_to_string(numeric)
-    months = ["january", "february", "march", "april", "june",
+    months = ["january", "february", "march", "april", "may", "june",
               "july", "august", "september", "october", "november",
               "december"]
-              
+    
     return months[numeric - 1]
   end
   
