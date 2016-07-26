@@ -183,7 +183,7 @@ module NaturalDateParsing
   #
   # ==== Attributes
   #
-  # * +word+ - A single word
+  # * +word+ - A String, preferably consisting of a single word.
   # * +creation_date+ - A Date object of when the text was created or released. 
   # Defaults to nil, but if provided can make returned dates more accurate.
   # * +parse_single_years+ - A boolean. If true, we interpret single numbers as
@@ -281,7 +281,6 @@ module NaturalDateParsing
   end
   
   
-  
   # Takes three words and tries to return a date.
   #
   # If no date can be interpreted from the word, returns nil. In this case,
@@ -307,8 +306,9 @@ module NaturalDateParsing
   ## Parse Functions
   ##
   
-  # Parse words of the form XX/XX
-  def NaturalDateParsing.slash_date(word, released = nil)
+  # Given a single word, assumes the word is of the form XX/XX and returns
+  # the appropriate Date object. If not possible, returns nil.
+  def NaturalDateParsing.slash_date(word, creation_date = nil)
     samp = word.split('/')
     month = samp[0].to_i
     day = samp[1].to_i
@@ -318,8 +318,8 @@ module NaturalDateParsing
       # bolted exception handling.
       begin
         proposed_date = Date.parse(word)
-        if(! released.nil?) ## We're sensitive to only years here.
-          years_diff = Date.today.year - released.year
+        if(! creation_date.nil?) ## We're sensitive to only years here.
+          years_diff = Date.today.year - creation_date.year
           proposed_date = proposed_date << (12 * years_diff)
         end
         return proposed_date
@@ -329,19 +329,24 @@ module NaturalDateParsing
     end
   end
   
-  # Parses 
-  def NaturalDateParsing.month_day(words, released = nil)
-    proposed_date = Date.parse(words.join(" "))
-    
-    diff_in_years = released.nil? ? 0 : (released.year - Date.today.year)
-    
-    return proposed_date >> diff_in_years * 12
+  # Parses an array containing two elements (single words) on the assumption
+  # that the array is of the form ["MONTH", "DAY"]
+  def NaturalDateParsing.month_day(words, creation_date = nil)
+    begin
+      proposed_date = Date.parse(words.join(" "))
+      
+      diff_in_years = creation_date.nil? ? 0 : (creation_date.year - Date.today.year)
+      
+      return proposed_date >> diff_in_years * 12
+    rescue ArgumentError
+      return nil
+    end
   end
   
-  # We parse a numeric date (1st, 2nd, 3rd, e.t.c.) given a release date
-  def NaturalDateParsing.numeric_single_day(word, released = nil)
-    diff_in_months = released.nil? ? 0 : (released.year * 12 + released.month) - 
-                                         (Date.today.year * 12 + Date.today.month)
+  # Parses a single numeric date (1st, 2nd, 3rd, e.t.c.).
+  def NaturalDateParsing.numeric_single_day(word, creation_date = nil)
+    diff_in_months = creation_date.nil? ? 0 : (creation_date.year * 12 + creation_date.month) - 
+                                              (Date.today.year * 12 + Date.today.month)
     
     begin
       return Date.parse(word) >> diff_in_months
@@ -351,7 +356,7 @@ module NaturalDateParsing
     end
   end
   
-  # word is of the form XXXX-XX-XX, DD-MM-YYYY or MM-DD-YYYY
+  # Parses a single word of the form XXXX-XX-XX, DD-MM-YYYY or MM-DD-YYYY
   def NaturalDateParsing.full_numeric_date(word)
     subparts = word.split("-")
     
@@ -380,7 +385,13 @@ module NaturalDateParsing
     return Date.parse(word)
   end
   
+  
   private
+  
+  ##############################################
+  ##
+  ## Private Functions
+  ##
   
   def NaturalDateParsing._weak_day?(word)
     return (NUMERIC_DAY.include? word) || (SUFFIXED_NUMERIC_DAY.include? word)
