@@ -1,3 +1,5 @@
+# Extra utility functions for broader use in the gem.
+
 module Utils
   
   # Determine whether or not a String is a base 10 integer.
@@ -31,7 +33,7 @@ module Utils
   # Performs delete_at for a range of integers
   def Utils.delete_at_indices(array, range)
     first_val = range.first
-    for i in range do
+    for _ in range do
       array.delete_at(first_val)
     end
     

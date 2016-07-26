@@ -175,8 +175,8 @@ module NaturalDateParsing
   # cases:
   # * DAY (mon, tuesday, e.t.c.)
   # * A relative day (today, tomorrow, tonight, yesterday)
-  # * MM/DD
-  # * 1st-31st
+  # * Dates of the form MM/DD
+  # * Numbers such as [1st, 31st]
   # * MONTH (jan, february, e.t.c.)
   # * YYYY (2012, 102. Must be enabled.)
   # * YYYY-MM-DD, DD-MM-YYYY, MM-DD-YYYY
