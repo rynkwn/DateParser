@@ -243,9 +243,8 @@ module NaturalDateParsing
         else
           return creation_date - 1
         end
-      else
-        tomorrow = 1
-        return creation_date + tomorrow ## Double check this.
+      elsif word == "tomorrow"
+        return creation_date + 1
       end
     end
     
