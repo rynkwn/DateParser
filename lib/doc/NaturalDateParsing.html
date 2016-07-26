@@ -63,13 +63,21 @@
 
   <ul class="link-list" role="directory">
     
+    <li ><a href="#method-c-full_numeric_date">::full_numeric_date</a>
+    
     <li ><a href="#method-c-interpret_date">::interpret_date</a>
+    
+    <li ><a href="#method-c-month_day">::month_day</a>
+    
+    <li ><a href="#method-c-numeric_single_day">::numeric_single_day</a>
     
     <li ><a href="#method-c-parse_one_word">::parse_one_word</a>
     
     <li ><a href="#method-c-parse_three_words">::parse_three_words</a>
     
     <li ><a href="#method-c-parse_two_words">::parse_two_words</a>
+    
+    <li ><a href="#method-c-slash_date">::slash_date</a>
     
   </ul>
 </div>
@@ -84,6 +92,61 @@
 
   <section class="description">
     
+<p>Handles the mechanics of natural language processing.</p>
+
+<h2 id="module-NaturalDateParsing-label-Methods">Methods<span><a href="#module-NaturalDateParsing-label-Methods">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>*interpret_date(txt, creation_date, parse_single_years)*: Taking a string
+text and several options, returns an array of dates. We parse in order of
+decreasing strictness. I.e., a very specific phrase like “January 1st,
+2013” will be parsed before “January 1st,” which will be parsed before just
+“2013”. Whenever we determine a phrase is part of a date, we remove the
+phrase after parsing. So in the example “January 1st, 2013” we&#39;ll
+return only one date.</p>
+
+<p>If no dates are found, returns an empty array.</p>
+
+<p>*parse_one_word(word, creation_date, parse_single_years)*: Given a single
+word, a string, tries to return a Date object.</p>
+
+<p>We check if the word is:</p>
+<ul><li>
+<p>A single day (monday, tues, e.t.c.)</p>
+</li><li>
+<p>A year, if that option is enabled.</p>
+</li><li>
+<p>A slash-date of the form MM/DD</p>
+</li><li>
+<p>A month (june, january)</p>
+</li><li>
+<p>A day in numeric form (1st, 21st)</p>
+</li><li>
+<p>A relative date (tomorrow, tonight, today)</p>
+</li></ul>
+
+<p>If none of those are found, then we return nil.</p>
+
+<p>*parse_two_words(words, creation_date)*: Given an array of two elements,
+each element being one word, tries to return a Date object.</p>
+
+<p>We check if the words are:</p>
+<ul><li>
+<p>Of the form MON DAY (June 1st, Jan 22nd)</p>
+</li></ul>
+
+<p>*parse_three_words(words, creation_date)*: Given an array of three
+elements, each element being one word, tries to return a Date object.</p>
+
+<p>We check if the words are:</p>
+<ul><li>
+<p>Of the form <a href="NaturalDateParsing.html#MONTH">MONTH</a> DAY YEAR (Jan
+1st, 2013)</p>
+</li><li>
+<p>Of the form YYYY-MM-DD</p>
+</li><li>
+<p>Of the form MM-DD-YYYY</p>
+</li></ul>
+
   </section>
 
   
@@ -118,7 +181,7 @@
       
         <dt id="SINGLE_DAYS">SINGLE_DAYS
         
-        <dd>
+        <dd><p>Constants</p>
         
       
         <dt id="SUFFIXED_NUMERIC_DAY">SUFFIXED_NUMERIC_DAY
@@ -139,11 +202,11 @@
        </header>
 
     
-      <div id="method-c-interpret_date" class="method-detail ">
+      <div id="method-c-full_numeric_date" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">interpret_date</span><span
-            class="method-args">(text, released = nil, parse_single_years = false)</span>
+          <span class="method-name">full_numeric_date</span><span
+            class="method-args">(word)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -152,31 +215,137 @@
 
         <div class="method-description">
           
-          <p>Gets an array of possible dates for a message @param released is the date
-the message was initially sent out. @param unique is a flag that signals
-whether we want to return unique dates only @param parse_single_years a
-flag to signal whether we should parse for single years.</p>
+          <p>word is of the form XXXX-XX-XX, DD-MM-YYYY or MM-DD-YYYY</p>
+          
+          
+
+          
+          <div class="method-source-code" id="full_numeric_date-source">
+            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 369</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">full_numeric_date</span>(<span class="ruby-identifier">word</span>)
+  <span class="ruby-identifier">subparts</span> = <span class="ruby-identifier">word</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;-&quot;</span>)
+  
+  <span class="ruby-comment"># This is a weak check to see where the year is</span>
+  <span class="ruby-identifier">year_index</span> = (<span class="ruby-identifier">subparts</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>).<span class="ruby-identifier">abs</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">31</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">2</span>
+  
+  <span class="ruby-comment"># Then we assume it&#39;s of the form YYYY-MM-DD</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">year_index</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">word</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># We check the subparts to try to see which part is DD.</span>
+    <span class="ruby-comment"># If we can&#39;t determine it, we assume it&#39;s International Standard Format,</span>
+    <span class="ruby-comment"># or DD-MM-YY</span>
+    
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">subparts</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">12</span>
+      <span class="ruby-comment"># American Standard (MM-DD-YYYY)</span>
+      <span class="ruby-identifier">subparts</span>[<span class="ruby-value">0</span>] = <span class="ruby-identifier">numeric_month_to_string</span>(<span class="ruby-identifier">subparts</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>)
+      <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">subparts</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot; &quot;</span>))
+      
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-comment"># International Standard (DD-MM-YYYY)</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">word</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">word</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-interpret_date" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">interpret_date</span><span
+            class="method-args">( txt, creation_date = nil, parse_single_years = false )</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Processes a given text and returns an array of probable dates contained
+within.</p>
+
+<p>Tries to interpret dates from the given text, in order from strictest
+interpretation to looser interpretations. No word can be part of two
+different dates.</p>
+
+<p>Works by calling <a
+href="NaturalDateParsing.html#method-c-parse_three_words">::parse_three_words</a>,
+<a
+href="NaturalDateParsing.html#method-c-parse_two_words">::parse_two_words</a>,
+and <a
+href="NaturalDateParsing.html#method-c-parse_one_word">::parse_one_word</a>
+on the text.</p>
+
+<h4 id="method-c-interpret_date-label-Attributes">Attributes<span><a href="#method-c-interpret_date-label-Attributes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p><code>txt</code> - The text to parse.</p>
+</li><li>
+<p><code>creation_date</code> - A Date object of when the text was created or
+released.</p>
+</li></ul>
+
+<p>Defaults to nil, but if provided can make returned dates more accurate.</p>
+<ul><li>
+<p><code>parse_single_years</code> - A boolean. If true, we interpret single
+numbers as</p>
+</li></ul>
+
+<p>years. This is a very broad assumption, and so defaults to false.</p>
+
+<h4 id="method-c-interpret_date-label-Examples">Examples<span><a href="#method-c-interpret_date-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h4>
+
+<pre class="ruby"><span class="ruby-identifier">text</span> = <span class="ruby-string">&quot;Henry and Hanke created a calendar that causes each day to fall &quot;</span> <span class="ruby-operator">+</span>
+       <span class="ruby-string">&quot;on the same day of the week every year. They recommend its &quot;</span> <span class="ruby-operator">+</span>
+       <span class="ruby-string">&quot;implementation on January 1, 2018, a Monday.&quot;</span>
+<span class="ruby-identifier">creation_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-string">&quot;July 6, 2016&quot;</span>)
+
+<span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">interpret_date</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">creation_date</span>)
+    <span class="ruby-comment">#=&gt; [#&lt;Date: 2018-01-01 ((2458120j,0s,0n),+0s,2299161j)&gt;, </span>
+         <span class="ruby-comment">#&lt;Date: 2016-07-11 ((2457581j,0s,0n),+0s,2299161j)&gt;]</span>
+
+<span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">interpret_date</span>(<span class="ruby-string">&quot;No dates here!&quot;</span>)
+    <span class="ruby-comment">#=&gt; []</span>
+
+<span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">interpret_date</span>(<span class="ruby-string">&quot;2012&quot;</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-keyword">true</span>)
+    <span class="ruby-comment">#=&gt; [#&lt;Date: 2012-01-01 ((2455928j,0s,0n),+0s,2299161j)&gt;]</span>
+</pre>
           
           
 
           
           <div class="method-source-code" id="interpret_date-source">
-            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 37</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">interpret_date</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">parse_single_years</span> = <span class="ruby-keyword">false</span>)
+            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 115</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">interpret_date</span>(
+                                      <span class="ruby-identifier">txt</span>, 
+                                      <span class="ruby-identifier">creation_date</span> = <span class="ruby-keyword">nil</span>, 
+                                      <span class="ruby-identifier">parse_single_years</span> = <span class="ruby-keyword">false</span>
+                                      )
   <span class="ruby-identifier">possible_dates</span> = []
-  <span class="ruby-identifier">text</span> = <span class="ruby-constant">Utils</span><span class="ruby-operator">::</span><span class="ruby-identifier">clean_str</span>(<span class="ruby-identifier">text</span>)
-  <span class="ruby-identifier">words</span> = <span class="ruby-identifier">text</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot; &quot;</span>).<span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">strip</span>}
+  <span class="ruby-identifier">txt</span> = <span class="ruby-constant">Utils</span><span class="ruby-operator">::</span><span class="ruby-identifier">clean_str</span>(<span class="ruby-identifier">txt</span>)
+  <span class="ruby-identifier">words</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot; &quot;</span>).<span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">strip</span>}
   
   <span class="ruby-comment"># We use the while loop, as apparently there are cases where we try to subset</span>
   <span class="ruby-comment"># words despite the value of i being &gt;= words.length - 3</span>
   <span class="ruby-comment"># TODO: Figure out why the above happens. Preferably return to for loop.</span>
-  
+  <span class="ruby-comment"># TODO: Cleaner way of structuring the below? I could break up the loops</span>
+  <span class="ruby-comment"># into single functions. Consider.</span>
   <span class="ruby-identifier">i</span> = <span class="ruby-value">0</span>
   
   <span class="ruby-keyword">while</span> (<span class="ruby-identifier">i</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">words</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">3</span>) <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">subset_words</span> = <span class="ruby-identifier">words</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">..</span>(<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">2</span>)]
     
-    <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">parse_three_words</span>(<span class="ruby-identifier">subset_words</span>, <span class="ruby-identifier">released</span>)
+    <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">parse_three_words</span>(<span class="ruby-identifier">subset_words</span>, <span class="ruby-identifier">creation_date</span>)
     
     <span class="ruby-keyword">if</span>(<span class="ruby-operator">!</span> <span class="ruby-identifier">proposed_date</span>.<span class="ruby-identifier">nil?</span>)
       <span class="ruby-identifier">possible_dates</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proposed_date</span>
@@ -191,7 +360,7 @@ flag to signal whether we should parse for single years.</p>
   
   <span class="ruby-keyword">while</span> (<span class="ruby-identifier">i</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">words</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>) <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">subset_words</span> = <span class="ruby-identifier">words</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">..</span>(<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>)]
-    <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">parse_two_words</span>(<span class="ruby-identifier">subset_words</span>, <span class="ruby-identifier">released</span>)
+    <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">parse_two_words</span>(<span class="ruby-identifier">subset_words</span>, <span class="ruby-identifier">creation_date</span>)
     
     <span class="ruby-keyword">if</span>(<span class="ruby-operator">!</span> <span class="ruby-identifier">proposed_date</span>.<span class="ruby-identifier">nil?</span>)
       <span class="ruby-identifier">possible_dates</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proposed_date</span>
@@ -207,7 +376,7 @@ flag to signal whether we should parse for single years.</p>
   <span class="ruby-keyword">while</span> (<span class="ruby-identifier">i</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">words</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>) <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">subset_words</span> = <span class="ruby-identifier">words</span>[<span class="ruby-identifier">i</span>]
     
-    <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">parse_one_word</span>(<span class="ruby-identifier">subset_words</span>, <span class="ruby-identifier">released</span>, <span class="ruby-identifier">parse_single_years</span>)
+    <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">parse_one_word</span>(<span class="ruby-identifier">subset_words</span>, <span class="ruby-identifier">creation_date</span>, <span class="ruby-identifier">parse_single_years</span>)
     
     <span class="ruby-keyword">if</span>(<span class="ruby-operator">!</span> <span class="ruby-identifier">proposed_date</span>.<span class="ruby-identifier">nil?</span>)
       <span class="ruby-identifier">possible_dates</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proposed_date</span>
@@ -230,11 +399,11 @@ flag to signal whether we should parse for single years.</p>
       </div>
 
     
-      <div id="method-c-parse_one_word" class="method-detail ">
+      <div id="method-c-month_day" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">parse_one_word</span><span
-            class="method-args">(word, released = nil, parse_single_years = false)</span>
+          <span class="method-name">month_day</span><span
+            class="method-args">(words, released = nil)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -243,33 +412,146 @@ flag to signal whether we should parse for single years.</p>
 
         <div class="method-description">
           
+          <p>Parsing things like “March 4”</p>
           
+          
+
+          
+          <div class="method-source-code" id="month_day-source">
+            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 347</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">month_day</span>(<span class="ruby-identifier">words</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">proposed_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">words</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot; &quot;</span>))
+  
+  <span class="ruby-identifier">diff_in_years</span> = <span class="ruby-identifier">released</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> (<span class="ruby-identifier">released</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">-</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>.<span class="ruby-identifier">year</span>)
+  
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">proposed_date</span> <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-identifier">diff_in_years</span> <span class="ruby-operator">*</span> <span class="ruby-value">12</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-numeric_single_day" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">numeric_single_day</span><span
+            class="method-args">(word, released = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>We parse a numeric date (1st, 2nd, 3rd, e.t.c.) given a release date</p>
+          
+          
+
+          
+          <div class="method-source-code" id="numeric_single_day-source">
+            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 356</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">numeric_single_day</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">diff_in_months</span> = <span class="ruby-identifier">released</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> (<span class="ruby-identifier">released</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">*</span> <span class="ruby-value">12</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">released</span>.<span class="ruby-identifier">month</span>) <span class="ruby-operator">-</span> 
+                                       (<span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">*</span> <span class="ruby-value">12</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>.<span class="ruby-identifier">month</span>)
+  
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">word</span>) <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-identifier">diff_in_months</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span>
+    <span class="ruby-comment">## If an ArgumentError arises, Date is not convinced it&#39;s a date.</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-parse_one_word" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse_one_word</span><span
+            class="method-args">( word, creation_date = nil, parse_single_years = false )</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Takes a single word and tries to return a date.</p>
+
+<p>If no date can be interpreted from the word, returns nil. We consider these
+cases:</p>
+<ul><li>
+<p>DAY (mon, tuesday, e.t.c.)</p>
+</li><li>
+<p>A relative day (today, tomorrow, tonight, yesterday)</p>
+</li><li>
+<p>MM/DD</p>
+</li><li>
+<p>1st-31st</p>
+</li><li>
+<p><a href="NaturalDateParsing.html#MONTH">MONTH</a> (jan, february, e.t.c.)</p>
+</li><li>
+<p>YYYY (2012, 102. Must be enabled.)</p>
+</li><li>
+<p>YYYY-MM-DD, DD-MM-YYYY, MM-DD-YYYY</p>
+</li></ul>
+
+<h4 id="method-c-parse_one_word-label-Attributes">Attributes<span><a href="#method-c-parse_one_word-label-Attributes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p><code>txt</code> - The text to parse.</p>
+</li><li>
+<p><code>creation_date</code> - A Date object of when the text was created or
+released.</p>
+</li></ul>
+
+<p>Defaults to nil, but if provided can make returned dates more accurate.</p>
+<ul><li>
+<p><code>parse_single_years</code> - A boolean. If true, we interpret single
+numbers as</p>
+</li></ul>
+
+<p>years. This is a very broad assumption, and so defaults to false.</p>
           
           
 
           
           <div class="method-source-code" id="parse_one_word-source">
-            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 96</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">parse_one_word</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">parse_single_years</span> = <span class="ruby-keyword">false</span>)
-  <span class="ruby-comment"># If the string is size 1, we assume it refers to a day of the week, or</span>
-  <span class="ruby-comment"># something of the form XX/XX</span>
+            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 205</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">parse_one_word</span>(
+                                      <span class="ruby-identifier">word</span>, 
+                                      <span class="ruby-identifier">creation_date</span> = <span class="ruby-keyword">nil</span>, 
+                                      <span class="ruby-identifier">parse_single_years</span> = <span class="ruby-keyword">false</span>
+                                      )
   
   <span class="ruby-keyword">if</span> <span class="ruby-constant">SINGLE_DAYS</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">word</span>
     <span class="ruby-identifier">proposed_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">word</span>)
-    <span class="ruby-identifier">tentative_day</span> = <span class="ruby-identifier">proposed_date</span>.<span class="ruby-identifier">day</span>
     
-    <span class="ruby-comment"># If we have the released date, we can try to be a little smarter</span>
-    <span class="ruby-keyword">if</span>(<span class="ruby-operator">!</span> <span class="ruby-identifier">released</span>.<span class="ruby-identifier">nil?</span>)
+    <span class="ruby-comment"># If we have the creation_date date, we can try to be a little smarter</span>
+    <span class="ruby-keyword">if</span>(<span class="ruby-operator">!</span> <span class="ruby-identifier">creation_date</span>.<span class="ruby-identifier">nil?</span>)
       <span class="ruby-comment"># If the tentative_day is less than the current day, we assume it takes</span>
       <span class="ruby-comment"># place next week.</span>
-      <span class="ruby-identifier">weeks_to_shift</span> = <span class="ruby-constant">DateUtils</span><span class="ruby-operator">::</span><span class="ruby-identifier">difference_in_weeks</span>(<span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>, <span class="ruby-identifier">released</span>)
+      <span class="ruby-identifier">weeks_to_shift</span> = <span class="ruby-identifier">difference_in_weeks</span>(<span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>, <span class="ruby-identifier">creation_date</span>)
                                                        
       <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">proposed_date</span> <span class="ruby-operator">-</span> (<span class="ruby-identifier">weeks_to_shift</span> <span class="ruby-operator">*</span> <span class="ruby-value">7</span>)
       
       <span class="ruby-comment"># Right now though, it should be within 1 week of accuracy, and always </span>
       <span class="ruby-comment"># one week ahead. The solution is pretty simple. If the proposed date </span>
       <span class="ruby-comment"># is more than a week ahead of the creation date, then go back one week.</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">proposed_date</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">released</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">7</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">proposed_date</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">creation_date</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">7</span>
         <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">proposed_date</span> <span class="ruby-operator">-</span> <span class="ruby-value">7</span>
       <span class="ruby-keyword">end</span>
       
@@ -279,40 +561,45 @@ flag to signal whether we should parse for single years.</p>
   
   <span class="ruby-keyword">if</span> <span class="ruby-constant">RELATIVE_DAYS</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">word</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">word</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;today&#39;</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">word</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;tonight&#39;</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">released</span>.<span class="ruby-identifier">nil?</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">creation_date</span>.<span class="ruby-identifier">nil?</span>
         <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>
       <span class="ruby-keyword">else</span>
-        <span class="ruby-keyword">return</span> <span class="ruby-identifier">released</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">creation_date</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">word</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;yesterday&#39;</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">released</span>.<span class="ruby-identifier">nil?</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">creation_date</span>.<span class="ruby-identifier">nil?</span>
         <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
       <span class="ruby-keyword">else</span>
-        <span class="ruby-keyword">return</span> <span class="ruby-identifier">released</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">creation_date</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">else</span>
       <span class="ruby-identifier">tomorrow</span> = <span class="ruby-value">1</span>
-      <span class="ruby-keyword">return</span> <span class="ruby-identifier">released</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">tomorrow</span> <span class="ruby-comment">## Double check this.</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-identifier">creation_date</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">tomorrow</span> <span class="ruby-comment">## Double check this.</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
   
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">word</span>.<span class="ruby-identifier">include?</span> <span class="ruby-string">&#39;/&#39;</span>
     <span class="ruby-comment"># In this case, we assume the string is of the form XX/XX</span>
-    <span class="ruby-keyword">return</span> <span class="ruby-constant">DateUtils</span><span class="ruby-operator">::</span><span class="ruby-identifier">slash_date</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">released</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">slash_date</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">creation_date</span>)
   <span class="ruby-keyword">end</span>
   
   <span class="ruby-keyword">if</span> <span class="ruby-constant">SUFFIXED_NUMERIC_DAY</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">word</span>
-    <span class="ruby-keyword">return</span> <span class="ruby-constant">DateUtils</span><span class="ruby-operator">::</span><span class="ruby-identifier">numeric</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">released</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">numeric_single_day</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">creation_date</span>)
   <span class="ruby-keyword">end</span>
   
   <span class="ruby-keyword">if</span> <span class="ruby-constant">MONTH</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">word</span>
-    <span class="ruby-keyword">return</span> <span class="ruby-constant">DateUtils</span><span class="ruby-operator">::</span><span class="ruby-identifier">default_month</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">released</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">default_month</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">creation_date</span>)
   <span class="ruby-keyword">end</span>
   
   <span class="ruby-comment"># In this case, we assume it&#39;s a year!</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">parse_single_years</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-constant">Utils</span><span class="ruby-operator">::</span><span class="ruby-identifier">is_int?</span> <span class="ruby-identifier">word</span>)
-    <span class="ruby-keyword">return</span> <span class="ruby-constant">DateUtils</span><span class="ruby-operator">::</span><span class="ruby-identifier">default_year</span>(<span class="ruby-identifier">word</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">default_year</span>(<span class="ruby-identifier">word</span>)
   <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">full_numeric_date?</span>(<span class="ruby-identifier">word</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">full_numeric_date</span>(<span class="ruby-identifier">word</span>)
+  <span class="ruby-keyword">end</span>
+  
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -328,7 +615,7 @@ flag to signal whether we should parse for single years.</p>
         
         <div class="method-heading">
           <span class="method-name">parse_three_words</span><span
-            class="method-args">(words, released = nil)</span>
+            class="method-args">(words, creation_date = nil)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -337,18 +624,35 @@ flag to signal whether we should parse for single years.</p>
 
         <div class="method-description">
           
-          <p>We assume it&#39;s the following format: <a
-href="NaturalDateParsing.html#MONTH">MONTH</a> NUM, YEAR</p>
+          <p>Takes three words and tries to return a date.</p>
+
+<p>If no date can be interpreted from the word, returns nil. In this case,
+assumes the word can take these forms:</p>
+<ul><li>
+<p><a href="NaturalDateParsing.html#MONTH">MONTH</a> DAY YEAR</p>
+</li></ul>
+
+<h4 id="method-c-parse_three_words-label-Attributes">Attributes<span><a href="#method-c-parse_three_words-label-Attributes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p><code>txt</code> - The text to parse.</p>
+</li><li>
+<p><code>creation_date</code> - A Date object of when the text was created or
+released.</p>
+</li></ul>
+
+<p>Defaults to nil, but if provided can make returned dates more accurate.</p>
           
           
 
           
           <div class="method-source-code" id="parse_three_words-source">
-            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 171</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">parse_three_words</span>(<span class="ruby-identifier">words</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 311</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">parse_three_words</span>(<span class="ruby-identifier">words</span>, <span class="ruby-identifier">creation_date</span> = <span class="ruby-keyword">nil</span>)
+  
   <span class="ruby-keyword">if</span> <span class="ruby-constant">MONTH</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">words</span>[<span class="ruby-value">0</span>]) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">_weak_day?</span>(<span class="ruby-identifier">words</span>[<span class="ruby-value">1</span>]) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Utils</span><span class="ruby-operator">::</span><span class="ruby-identifier">is_int?</span>(<span class="ruby-identifier">words</span>[<span class="ruby-value">2</span>])
     <span class="ruby-keyword">return</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">words</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot; &quot;</span>))
   <span class="ruby-keyword">end</span>
+  
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -364,7 +668,7 @@ href="NaturalDateParsing.html#MONTH">MONTH</a> NUM, YEAR</p>
         
         <div class="method-heading">
           <span class="method-name">parse_two_words</span><span
-            class="method-args">(words, released = nil)</span>
+            class="method-args">(words, creation_date = nil)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -373,16 +677,84 @@ href="NaturalDateParsing.html#MONTH">MONTH</a> NUM, YEAR</p>
 
         <div class="method-description">
           
-          <p>Now we assume it refers to a month day, or MON ## combination.</p>
+          <p>Takes two words and tries to return a date.</p>
+
+<p>If no date can be interpreted from the word, returns nil. In this case, we
+look for dates of this form:</p>
+<ul><li>
+<p><a href="NaturalDateParsing.html#MONTH">MONTH</a> DAY</p>
+</li></ul>
+
+<h4 id="method-c-parse_two_words-label-Attributes">Attributes<span><a href="#method-c-parse_two_words-label-Attributes">&para;</a> <a href="#top">&uarr;</a></span></h4>
+<ul><li>
+<p><code>txt</code> - The text to parse.</p>
+</li><li>
+<p><code>creation_date</code> - A Date object of when the text was created or
+released.</p>
+</li></ul>
+
+<p>Defaults to nil, but if provided can make returned dates more accurate.</p>
           
           
 
           
           <div class="method-source-code" id="parse_two_words-source">
-            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 163</span>
-<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">parse_two_words</span>(<span class="ruby-identifier">words</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>)
+            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 289</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">parse_two_words</span>(<span class="ruby-identifier">words</span>, <span class="ruby-identifier">creation_date</span> = <span class="ruby-keyword">nil</span>)
+  
   <span class="ruby-keyword">if</span> <span class="ruby-constant">MONTH</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">words</span>[<span class="ruby-value">0</span>]) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">_weak_day?</span>(<span class="ruby-identifier">words</span>[<span class="ruby-value">1</span>])
-    <span class="ruby-keyword">return</span> <span class="ruby-constant">DateUtils</span><span class="ruby-operator">::</span><span class="ruby-identifier">month_day</span>(<span class="ruby-identifier">words</span>, <span class="ruby-identifier">released</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">month_day</span>(<span class="ruby-identifier">words</span>, <span class="ruby-identifier">creation_date</span>)
+  <span class="ruby-keyword">end</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-slash_date" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">slash_date</span><span
+            class="method-args">(word, released = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parse words of the form XX/XX</p>
+          
+          
+
+          
+          <div class="method-source-code" id="slash_date-source">
+            <pre><span class="ruby-comment"># File date_parser/natural_date_parsing.rb, line 325</span>
+<span class="ruby-keyword">def</span> <span class="ruby-constant">NaturalDateParsing</span>.<span class="ruby-identifier">slash_date</span>(<span class="ruby-identifier">word</span>, <span class="ruby-identifier">released</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">samp</span> = <span class="ruby-identifier">word</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&#39;/&#39;</span>)
+  <span class="ruby-identifier">month</span> = <span class="ruby-identifier">samp</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_i</span>
+  <span class="ruby-identifier">day</span> = <span class="ruby-identifier">samp</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">month</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">month</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">12</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">31</span>
+    <span class="ruby-comment"># TODO: IMPROVE EXCEPTION HANDLING.</span>
+    <span class="ruby-comment"># bolted exception handling.</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">proposed_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">word</span>)
+      <span class="ruby-keyword">if</span>(<span class="ruby-operator">!</span> <span class="ruby-identifier">released</span>.<span class="ruby-identifier">nil?</span>) <span class="ruby-comment">## We&#39;re sensitive to only years here.</span>
+        <span class="ruby-identifier">years_diff</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">released</span>.<span class="ruby-identifier">year</span>
+        <span class="ruby-identifier">proposed_date</span> = <span class="ruby-identifier">proposed_date</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-value">12</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">years_diff</span>)
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-identifier">proposed_date</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ArgumentError</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

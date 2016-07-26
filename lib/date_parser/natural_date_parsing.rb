@@ -80,6 +80,13 @@ module NaturalDateParsing
   
   # Processes a given text and returns an array of probable dates contained within.
   #
+  # Tries to interpret dates from the given text, in order from strictest
+  # interpretation to looser interpretations. No word can be part of two
+  # different dates.
+  #
+  # Works by calling parse_three_words, parse_two_words, and parse_one_word
+  # on the text. 
+  #
   # ==== Attributes
   #
   # * +txt+ - The text to parse.
@@ -95,9 +102,15 @@ module NaturalDateParsing
   #           "implementation on January 1, 2018, a Monday."
   #    creation_date = Date.parse("July 6, 2016")
   #
-  #    DateParser::parse(text, creation_date)
+  #    NaturalDateParsing.interpret_date(text, creation_date)
   #        #=> [#<Date: 2018-01-01 ((2458120j,0s,0n),+0s,2299161j)>, 
   #             #<Date: 2016-07-11 ((2457581j,0s,0n),+0s,2299161j)>]
+  #
+  #    NaturalDateParsing.interpret_date("No dates here!")
+  #        #=> []
+  #
+  #    NaturalDateParsing.interpret_date("2012", nil, true)
+  #        #=> [#<Date: 2012-01-01 ((2455928j,0s,0n),+0s,2299161j)>]
   #
   def NaturalDateParsing.interpret_date(
                                         txt, 
@@ -111,7 +124,8 @@ module NaturalDateParsing
     # We use the while loop, as apparently there are cases where we try to subset
     # words despite the value of i being >= words.length - 3
     # TODO: Figure out why the above happens. Preferably return to for loop.
-    
+    # TODO: Cleaner way of structuring the below? I could break up the loops
+    # into single functions. Consider.
     i = 0
     
     while (i <= words.length - 3) do
@@ -168,6 +182,26 @@ module NaturalDateParsing
   ## Parse Cases (1 word, 2 words, 3 words)
   ##
   
+  # Takes a single word and tries to return a date.
+  #
+  # If no date can be interpreted from the word, returns nil. We consider these
+  # cases:
+  # * DAY (mon, tuesday, e.t.c.)
+  # * A relative day (today, tomorrow, tonight, yesterday)
+  # * MM/DD
+  # * 1st-31st
+  # * MONTH (jan, february, e.t.c.)
+  # * YYYY (2012, 102. Must be enabled.)
+  # * YYYY-MM-DD, DD-MM-YYYY, MM-DD-YYYY
+  #
+  # ==== Attributes
+  #
+  # * +txt+ - The text to parse.
+  # * +creation_date+ - A Date object of when the text was created or released. 
+  # Defaults to nil, but if provided can make returned dates more accurate.
+  # * +parse_single_years+ - A boolean. If true, we interpret single numbers as
+  # years. This is a very broad assumption, and so defaults to false.
+  #
   def NaturalDateParsing.parse_one_word(
                                         word, 
                                         creation_date = nil, 
@@ -176,7 +210,6 @@ module NaturalDateParsing
     
     if SINGLE_DAYS.include? word
       proposed_date = Date.parse(word)
-      tentative_day = proposed_date.day
       
       # If we have the creation_date date, we can try to be a little smarter
       if(! creation_date.nil?)
@@ -237,10 +270,22 @@ module NaturalDateParsing
     if full_numeric_date?(word)
       return full_numeric_date(word)
     end
+    
   end
   
   
-  # Now we assume it refers to a month day, or MON ## combination.
+  # Takes two words and tries to return a date.
+  #
+  # If no date can be interpreted from the word, returns nil. In this case,
+  # we look for dates of this form:
+  # * MONTH DAY
+  #
+  # ==== Attributes
+  #
+  # * +txt+ - The text to parse.
+  # * +creation_date+ - A Date object of when the text was created or released. 
+  # Defaults to nil, but if provided can make returned dates more accurate.
+  #
   def NaturalDateParsing.parse_two_words(words, creation_date = nil)
     
     if MONTH.include?(words[0]) && _weak_day?(words[1])
@@ -250,7 +295,19 @@ module NaturalDateParsing
   end
   
   
-  ## We assume it's the following format: MONTH NUM, YEAR
+  
+  # Takes three words and tries to return a date.
+  #
+  # If no date can be interpreted from the word, returns nil. In this case,
+  # assumes the word can take these forms:
+  # * MONTH DAY YEAR
+  #
+  # ==== Attributes
+  #
+  # * +txt+ - The text to parse.
+  # * +creation_date+ - A Date object of when the text was created or released. 
+  # Defaults to nil, but if provided can make returned dates more accurate.
+  #
   def NaturalDateParsing.parse_three_words(words, creation_date = nil)
     
     if MONTH.include?(words[0]) && _weak_day?(words[1]) && Utils::is_int?(words[2])

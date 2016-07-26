@@ -138,6 +138,9 @@ released.</p>
 </li><li>
 <p><code>:nil_date</code> - A date to return if no dates are parsed. Defaults
 to nil.</p>
+</li><li>
+<p><code>:parse_single_years</code> - Should we parse single ints as years?
+Defaults to false.</p>
 </li></ul>
 
 <h4 id="method-c-parse-label-Examples">Examples<span><a href="#method-c-parse-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h4>
@@ -175,12 +178,15 @@ DateParser::parse(&quot;No dates here&quot;, nil, nil_date: Date.parse(&quot;Jan
 
           
           <div class="method-source-code" id="parse-source">
-            <pre><span class="ruby-comment"># File date_parser.rb, line 59</span>
+            <pre><span class="ruby-comment"># File date_parser.rb, line 60</span>
 <span class="ruby-keyword">def</span> <span class="ruby-constant">DateParser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">creation_date</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">opts</span> = {})
   <span class="ruby-identifier">unique</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:unique</span>] <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
   <span class="ruby-identifier">nil_date</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:nil_date</span>] <span class="ruby-operator">||</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">parse_single_years</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:parse_single_years</span>] <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
   
-  <span class="ruby-identifier">interpreted_dates</span> = <span class="ruby-constant">NaturalDateParsing</span><span class="ruby-operator">::</span><span class="ruby-identifier">interpret_date</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>)
+  <span class="ruby-identifier">interpreted_dates</span> = <span class="ruby-constant">NaturalDateParsing</span><span class="ruby-operator">::</span><span class="ruby-identifier">interpret_date</span>(<span class="ruby-identifier">txt</span>, 
+                                                         <span class="ruby-identifier">creation_date</span>, 
+                                                         <span class="ruby-identifier">parse_single_years</span>)
   
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">unique</span>
     <span class="ruby-identifier">interpreted_dates</span>.<span class="ruby-identifier">uniq!</span>
