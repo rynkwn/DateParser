@@ -14,6 +14,7 @@
 testfile.rb
 dump.rb
 test.rb
+goal.txt
 
 # Used by dotenv library to load environment variables.
 # .env
