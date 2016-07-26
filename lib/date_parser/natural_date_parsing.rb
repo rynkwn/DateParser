@@ -212,9 +212,9 @@ module NaturalDateParsing
         if proposed_date - creation_date > 7
           proposed_date = proposed_date - 7
         end
-        
-        return proposed_date
       end
+      
+      return proposed_date
     end
     
     if RELATIVE_DAYS.include? word
