@@ -1,40 +1,79 @@
+require 'date'
+
 require_relative 'date_parser/natural_date_parsing'
-require_relative 'date_parser/utils'
+
+# DateParser is the main interface between the user and the parser
+#
+# == Methods
+#
+# <b>parse(txt, options)</b>: Parse a block of text and return an array of the parsed
+# dates as Date objects.
+#
 
 module DateParser
   
-  # Public: Parse the text and return interpreted dates and times.
+  # Parses a text object and returns an array of parsed dates.
   #
-  # txt  - The String to be duplicated.
-  # unique - Boolean flag. Should we filter out duplicate dates?
+  # ==== Attributes
   #
-  # Returns an array of Date
-  # From a Daily Message, grab date in the natural message, if possible.
-  # Otherwise, default to my provided date.
-  def DateParser.parse(txt, unique=false)
-    txt = Utils::clean_str(txt)
+  # * +txt+ - The text to parse.
+  # * +creation_date+ - A Date object of when the text was created or released. 
+  # Defaults to nil, but if provided can make returned dates more accurate.
+  #
+  # ==== Options
+  #
+  # * +:unique+ - Return only unique Date objects. Defaults to false
+  # * +:nil_date+ - A date to return if no dates are parsed. Defaults to nil.
+  # * +:parse_single_years+ - Should we parse single ints as years? Defaults to false.
+  #
+  # ==== Examples
+  #
+  #    text = "Henry and Hanke created a calendar that causes each day to fall " +
+  #           "on the same day of the week every year. They recommend its " +
+  #           "implementation on January 1, 2018, a Monday."
+  #    creation_date = Date.parse("July 6, 2016")
+  #
+  #    DateParser::parse(text, creation_date)
+  #        #=> [#<Date: 2018-01-01 ((2458120j,0s,0n),+0s,2299161j)>, 
+  #             #<Date: 2016-07-11 ((2457581j,0s,0n),+0s,2299161j)>]
+  #
+  #    ######################################
+  #    ##
+  #    ## Option Examples:
+  #    ##
+  #
+  #    text = "Sunday, Sunday, Sunday!"
+  #    DateParser::parse(text, nil, unique: false)
+  #        #=> [#<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>, 
+  #             #<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>, 
+  #             #<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>]
+  #
+  #    DateParser::parse(text, nil unique: true)
+  #        #=> [#<Date: 2016-07-24 ((2457594j,0s,0n),+0s,2299161j)>]
+  #
+  #    DateParser::parse("No dates here", nil)
+  #        #=> []
+  #
+  #    DateParser::parse("No dates here", nil, nil_date: Date.parse("Jan 1 2012"))
+  #        #=> [#<Date: 2012-01-01 ((2455928j,0s,0n),+0s,2299161j)>]
+  #
+  def DateParser.parse(txt, creation_date = nil, opts = {})
+    unique = opts[:unique] || false
+    nil_date = opts[:nil_date] || nil
+    parse_single_years = opts[:parse_single_years] || false
     
-    date_parse = Proc.new{|x| Date.parse(x)}
-    
-    interpreted_dates = NaturalDateParsing::interpret_Date(txt, Date.today)
+    interpreted_dates = NaturalDateParsing::interpret_date(txt, 
+                                                           creation_date, 
+                                                           parse_single_years)
     
     if unique
       interpreted_dates.uniq!
     end
     
+    if interpreted_dates.empty?
+      interpreted_dates = [nil_date].flatten
+    end
     
-    #if !contemporary_date.nil?
-      #possible_dates =  dm_interpret_date(msg, contemporary_date, true)
-      #last_mentioned_date = possible_dates.last
-      #if(last_mentioned_date.nil?)
-        #return contemporary_date
-      #else
-        #return last_mentioned_date
-      #end
-    #end
-    
-    # We return this iff it's not a normally formatted message. In which case
-    # it's most likely a category. I.e., === SOMETHING ===
     return interpreted_dates
   end
 end
