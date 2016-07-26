@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.authors     = ["Ryan Kwon"]
   s.email       = 'rynkwn@gmail.com'
   s.files       = ["lib/date_parser.rb"]
-  s.homepage    =
-    ''
+  s.homepage    = 'https://github.com/rynkwn/DateParser'
   s.license       = 'MIT'
 end

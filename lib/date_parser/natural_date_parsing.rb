@@ -5,8 +5,10 @@ require_relative "utils"
 #
 # == Methods
 #
-# *interpret_date(txt, creation_date, parse_single_years)*: Taking a string text
-# and several options, returns an array of dates. We parse in order of decreasing
+# <b>interpret_date(txt, creation_date, parse_single_years)</b>: 
+# Return an array of dates from the set of parameters.
+#
+# We parse in order of decreasing
 # strictness. I.e., a very specific phrase like "January 1st, 2013" will be parsed
 # before "January 1st," which will be parsed before just "2013". Whenever we
 # determine a phrase is part of a date, we remove the phrase after parsing.
@@ -14,31 +16,8 @@ require_relative "utils"
 #
 # If no dates are found, returns an empty array.
 #
-# *parse_one_word(word, creation_date, parse_single_years)*: Given a single word,
+# <b>parse_one_word(word, creation_date, parse_single_years)</b>: Given a single word,
 # a string, tries to return a Date object.
-#
-# We check if the word is:
-# * A single day (monday, tues, e.t.c.)
-# * A year, if that option is enabled.
-# * A slash-date of the form MM/DD
-# * A month (june, january)
-# * A day in numeric form (1st, 21st)
-# * A relative date (tomorrow, tonight, today)
-# If none of those are found, then we return nil.
-#
-# *parse_two_words(words, creation_date)*: Given an array of two elements, each
-# element being one word, tries to return a Date object.
-# 
-# We check if the words are:
-# * Of the form MON DAY (June 1st, Jan 22nd)
-#
-# *parse_three_words(words, creation_date)*: Given an array of three elements,
-# each element being one word, tries to return a Date object.
-#
-# We check if the words are:
-# * Of the form MONTH DAY YEAR (Jan 1st, 2013)
-# * Of the form YYYY-MM-DD
-# * Of the form MM-DD-YYYY
 #
 
 module NaturalDateParsing
@@ -48,14 +27,18 @@ module NaturalDateParsing
   ## Constants
   ##
   
+  # Names of days as well as common shortened versions.
   SINGLE_DAYS = [
                  'mon', 'tue', 'wed', 'thur', 'fri', 'sat', 'sun',
                  'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 
                  'saturday', 'sunday', 'tues'
                 ]
                 
+  # Phrases that denote a date relative to today (here often
+  # called the creation_date)
   RELATIVE_DAYS = ['today', 'tomorrow', 'tonight', 'yesterday']
   
+  # Names of months as well as common shortened versions
   MONTH = [
            'jan', 'feb', 'mar', 'may', 'june', 'july', 'aug', 'sept', 'oct',
            'nov', 'dec',
@@ -63,8 +46,10 @@ module NaturalDateParsing
            'october', 'november', 'december'
           ]
           
+  # A list of numbers from [1, 31]
   NUMERIC_DAY = ('1'..'31').to_a
                 
+  # Numbers from [1, 31] as well as the common suffixes (such as 1st, 2nd, e.t.c.)
   SUFFIXED_NUMERIC_DAY = [
                            '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', 
                            '8th', '9th', '10th', '11th', '12th', '13th', '14th', 
@@ -80,6 +65,8 @@ module NaturalDateParsing
   
   # Processes a given text and returns an array of probable dates contained within.
   #
+  # ==== Description
+  # 
   # Tries to interpret dates from the given text, in order from strictest
   # interpretation to looser interpretations. No word can be part of two
   # different dates.
@@ -196,7 +183,7 @@ module NaturalDateParsing
   #
   # ==== Attributes
   #
-  # * +txt+ - The text to parse.
+  # * +word+ - A single word
   # * +creation_date+ - A Date object of when the text was created or released. 
   # Defaults to nil, but if provided can make returned dates more accurate.
   # * +parse_single_years+ - A boolean. If true, we interpret single numbers as
@@ -281,7 +268,7 @@ module NaturalDateParsing
   #
   # ==== Attributes
   #
-  # * +txt+ - The text to parse.
+  # * +words+ - An array of two words, downcased and stripped.
   # * +creation_date+ - A Date object of when the text was created or released. 
   # Defaults to nil, but if provided can make returned dates more accurate.
   #
@@ -303,7 +290,7 @@ module NaturalDateParsing
   #
   # ==== Attributes
   #
-  # * +txt+ - The text to parse.
+  # * +words+ - An array of three words, downcased and stripped.
   # * +creation_date+ - A Date object of when the text was created or released. 
   # Defaults to nil, but if provided can make returned dates more accurate.
   #
@@ -342,7 +329,7 @@ module NaturalDateParsing
     end
   end
   
-  # Parsing things like "March 4"
+  # Parses 
   def NaturalDateParsing.month_day(words, released = nil)
     proposed_date = Date.parse(words.join(" "))
     

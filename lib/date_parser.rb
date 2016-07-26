@@ -6,7 +6,7 @@ require_relative 'date_parser/natural_date_parsing'
 #
 # == Methods
 #
-# *parse(txt, options)*: Parse a block of text and return an array of the parsed
+# <b>parse(txt, options)</b>: Parse a block of text and return an array of the parsed
 # dates as Date objects.
 #
 
