@@ -218,6 +218,7 @@ module NaturalDateParsing
       return proposed_date
     end
     
+    # Parsing phrases like "yesterday", "today", "tonight"
     if RELATIVE_DAYS.include? word
       if word == 'today' || word == 'tonight'
         if creation_date.nil?
@@ -236,15 +237,17 @@ module NaturalDateParsing
       end
     end
     
+    # Parsing strings of the form XX/XX
     if word.include? '/'
-      # In this case, we assume the string is of the form XX/XX
       return slash_date(word, creation_date)
     end
     
+    # Parsing strings like "23rd"
     if SUFFIXED_NUMERIC_DAY.include? word
       return numeric_single_day(word, creation_date)
     end
     
+    # Parsing month names 
     if MONTH.include? word
       return default_month(word, creation_date)
     end
@@ -254,6 +257,7 @@ module NaturalDateParsing
       return default_year(word)
     end
     
+    # Parsing XX-XX-XXXX or XXXX-XX-XX
     if full_numeric_date?(word)
       return full_numeric_date(word)
     end
@@ -295,7 +299,7 @@ module NaturalDateParsing
   # Defaults to nil, but if provided can make returned dates more accurate.
   #
   def NaturalDateParsing.parse_three_words(words, creation_date = nil)
-    
+
     if MONTH.include?(words[0]) && _weak_day?(words[1]) && Utils::is_int?(words[2])
       return Date.parse(words.join(" "))
     end
@@ -316,7 +320,6 @@ module NaturalDateParsing
     
     if month > 0 && month <= 12 && day > 0 && day <= 31
       # TODO: IMPROVE EXCEPTION HANDLING.
-      # bolted exception handling.
       begin
         proposed_date = Date.parse(word)
         if(! creation_date.nil?) ## We're sensitive to only years here.
