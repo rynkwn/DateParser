@@ -100,7 +100,9 @@ DateParser::parse("No dates here",
 # Examples
 
 DateParser has just one function: `parse(txt, creation_date, opts)`, which
-always returns an array with Date elements parsed from the text.
+always returns an array with Date elements parsed from the text. If DateParser
+can't find any dates, it'll return an empty array (or the `nil_date`, if you
+define that!)
 
 `parse` is case-insensitive, robust to crazy punctuation and spacing, and will 
 try to interpret dates in the strictest possible way before trying to find 
