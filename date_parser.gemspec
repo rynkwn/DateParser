@@ -4,8 +4,7 @@ Gem::Specification.new do |s|
   s.date        = '2016-07-25'
   s.summary     = "Parsing natural language into date and times."
   s.description = "DateParser is a simple, fast, and effective way to " +
-                  "parse dates from natural language text for use in other " +
-                  "applications."
+                  "parse dates from natural language text in a robust way."
   s.authors     = ["Ryan Kwon"]
   s.email       = 'rynkwn@gmail.com'
   s.files       = ["lib/date_parser.rb"]
