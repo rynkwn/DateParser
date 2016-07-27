@@ -43,17 +43,17 @@ DateParser::parse(text, creation_date).to_s
 
 
 text = "7-24-2015"
-DateParser::parse(text, creation_date).to_s
+DateParser::parse(text).to_s
     #=> [#<Date: 2015-07-24 ((2457228j,0s,0n),+0s,2299161j)>]
 
 
 text = "2012-02-12"
-DateParser::parse(text, creation_date).to_s
+DateParser::parse(text).to_s
     #=> [#<Date: 2012-02-12 ((2455970j,0s,0n),+0s,2299161j)>]
 
 
 text = "24-07-2015"
-DateParser::parse(text, creation_date).to_s
+DateParser::parse(text).to_s
     #=> [#<Date: 2015-07-24 ((2457228j,0s,0n),+0s,2299161j)>]
 
 
@@ -106,8 +106,7 @@ looser interpretations. Additionally, no word can be used in more than one
 Date.
 
 For example: `DateParser::parse("Jan 12, 2013", nil, parse_single_years: true)` 
-will return `[#<Date: 2013-01-12 ((2456305j,0s,0n),+0s,2299161j)>]`, and not
-`[#<Date: 2013-01-12 ((2456305j,0s,0n),+0s,2299161j)>, #<Date: 2013-01-01 ((2456305j,0s,0n),+0s,2299161j)>]`
+will return `["Jan 12, 2013"]`, and not `["Jan 12, 2013", "Jan 1, 2013"]`
 
 ## What is creation_date?
 It's meant to make the parser smarter! `creation_date` is the date the text was
