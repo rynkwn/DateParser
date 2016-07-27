@@ -1,3 +1,6 @@
+# DateParser 0.1.1
+* Critical bug fix that made gem useless.
+
 # DateParser 0.1.0
 
 * Improved parsing algorithm.
