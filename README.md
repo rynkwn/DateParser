@@ -12,7 +12,7 @@ $ gem install date_parser
 ```ruby
 require 'date_parser'
 
-# DateParser::parse(txt, creation_date, opts)
+# DateParser::parse(txt, creation_date = nil, opts)
 
 text = "Newsflash: things happen on 02/12!"
 creation_date = Date.parse("January 1st, 1994")
