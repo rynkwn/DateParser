@@ -74,6 +74,9 @@ module DateParser
       interpreted_dates = [nil_date].flatten
     end
     
+    # Possibility of getting [nil]
+    interpreted_dates.delete(nil)
+    
     return interpreted_dates
   end
 end

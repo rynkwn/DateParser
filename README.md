@@ -85,7 +85,7 @@ DateParser::parse(text, nil, unique: true).to_s
 
 
 DateParser::parse("No dates here", nil).to_s
-    #=> [nil]
+    #=> []
 
 
 DateParser::parse("No dates here", 
