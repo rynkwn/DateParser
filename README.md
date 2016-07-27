@@ -9,7 +9,7 @@ $ gem install date_parser
 ```
 
 # Usage
-```
+```ruby
 require 'date_parser'
 
 ```
