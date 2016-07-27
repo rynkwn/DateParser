@@ -10,5 +10,5 @@ Gem::Specification.new do |s|
   s.email       = 'rynkwn@gmail.com'
   s.files       = ["lib/date_parser.rb"]
   s.homepage    = 'https://github.com/rynkwn/DateParser'
-  s.license       = 'MIT'
+  s.license     = 'MIT'
 end
