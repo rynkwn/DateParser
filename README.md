@@ -5,7 +5,7 @@ text in a flexible way.
 
 # Installation
 ```
-$ gem install date_parser
+$ gem install DateParser
 ```
 
 # Usage
