@@ -1,4 +1,4 @@
-# NaturalTime 0.1.0
+# DateParser 0.1.0
 
 * Improved parsing algorithm.
 * No longer allow "sub-solutions" inside stricter solutions.
@@ -7,4 +7,4 @@
 * Now parses simple 'relative words' like "yesterday" and "today" correctly.
 * Many, many more functions are now released sensitive!
 * Option to parse single years (Such as "1302" alone.)
-* Various bugfixes
+* Various smaller bug fixes.
