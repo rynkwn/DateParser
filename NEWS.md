@@ -1,5 +1,5 @@
 # DateParser 0.1.1
-* Critical bug fix that made gem useless.
+* Critical bug fix - Helper files now sent with the gem.
 
 # DateParser 0.1.0
 
