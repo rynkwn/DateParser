@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'DateParser'
   s.version     = '0.1.0'
-  s.date        = '2016-07-25'
+  s.date        = '2016-07-26'
   s.summary     = "Parsing natural language into date and times."
   s.description = "DateParser is a simple, fast, and effective way to " +
                   "parse dates from natural language text in a robust way."
