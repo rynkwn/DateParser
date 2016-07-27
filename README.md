@@ -98,4 +98,28 @@ DateParser::parse("No dates here",
 # Examples
 
 DateParser has just one function: `parse(txt, creation_date, opts)`, which
-always returns an array with dates found in the text
+always returns an array with Date elements parsed from the text.
+
+`parse` is case-insensitive, robust to crazy punctuation and spacing, and will 
+try to interpret dates in the strictest possible way before trying to find 
+looser interpretations. Additionally, no word can be used in more than one
+Date.
+
+For example: `DateParser::parse("Jan 12, 2013", nil, parse_single_years: true)` 
+will return `[#<Date: 2013-01-12 ((2456305j,0s,0n),+0s,2299161j)>]`, and not
+`[#<Date: 2013-01-12 ((2456305j,0s,0n),+0s,2299161j)>, #<Date: 2013-01-01 ((2456305j,0s,0n),+0s,2299161j)>]`
+
+## What is creation_date?
+It's meant to make the parser smarter! `creation_date` is the date the text was
+written. If provided, the parser will try to interpret dates like "Monday" relative
+to the `creation_date`.
+
+## Options!
+* `unique`: (boolean) Return only unique dates in the output array.
+* `nil_date`: (Date) If no dates are found, instead of returning an empty array,
+return an array containing only `nil_date`.
+* `parse_single_years`: (boolean) Should the parser interpret integers as years?
+
+# Requests or Bugs?
+Leave an issue on this Github page! I'll most likely get back to you within 24
+hours.
