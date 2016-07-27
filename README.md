@@ -94,3 +94,8 @@ DateParser::parse("No dates here",
                   ).to_s
     #=> [#<Date: 2016-01-01 ((2457389j,0s,0n),+0s,2299161j)>]
 ```
+
+# Examples
+
+DateParser has just one function: `parse(txt, creation_date, opts)`, which
+always returns an array with dates found in the text
