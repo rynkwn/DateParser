@@ -27,7 +27,8 @@ module DateParser
   # * +:parse_single_years+ - Parse single ints as years. Defaults to false.
   # * +:parse_ambiguous_dates+ - Some phrases are not necessarily dates depending
   #   on context. For example "1st" may not refer to 
-  #   the 1st of a month. Defaults to true.
+  #   the 1st of a month. This option toggles whether or not those
+  #   phrases are considered dates. Defaults to true.
   #
   # ==== Examples
   #
@@ -64,6 +65,7 @@ module DateParser
     unique = opts[:unique] || false
     nil_date = opts[:nil_date] || nil
     parse_single_years = opts[:parse_single_years] || false
+    parse_ambiguous_dates = opts[:parse_ambiguous_dates] || true
     
     interpreted_dates = NaturalDateParsing::interpret_date(txt, 
                                                            creation_date, 
