@@ -84,7 +84,7 @@ module NaturalDateParsing
   # * +parse_single_years+ - A boolean. If true, we interpret single numbers as
   #   years. This is a very broad assumption, and so defaults to false.
   #
-  # * +:parse_ambiguous_dates+ - Some phrases are not necessarily dates depending
+  # * +parse_ambiguous_dates+ - Some phrases are not necessarily dates depending
   #   on context. For example "1st" may not refer to 
   #   the 1st of a month. This option toggles whether or not those
   #   phrases are considered dates. Defaults to true.
@@ -202,7 +202,7 @@ module NaturalDateParsing
   # * +parse_single_years+ - A boolean. If true, we interpret single numbers as
   #   years. This is a very broad assumption, and so defaults to false.
   #
-  # * +:parse_ambiguous_dates+ - Some phrases are not necessarily dates depending
+  # * +parse_ambiguous_dates+ - Some phrases are not necessarily dates depending
   #   on context. For example "1st" may not refer to 
   #   the 1st of a month. This option toggles whether or not those
   #   phrases are considered dates. Defaults to true.
