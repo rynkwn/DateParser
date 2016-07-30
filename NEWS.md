@@ -1,3 +1,8 @@
+# DateParser 0.1.2
+* New option: `parse_ambiguous_dates` flag, which determines whether or not some 
+looser phrases are considered dates.
+* Documentation fixes.
+
 # DateParser 0.1.1
 * Critical bug fix - Helper files now sent with the gem.
 

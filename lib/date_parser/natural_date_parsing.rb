@@ -102,7 +102,8 @@ module NaturalDateParsing
   def NaturalDateParsing.interpret_date(
                                         txt, 
                                         creation_date = nil, 
-                                        parse_single_years = false
+                                        parse_single_years = false,
+                                        parse_ambiguous_dates = true
                                         )
     possible_dates = []
     txt = Utils::clean_str(txt)

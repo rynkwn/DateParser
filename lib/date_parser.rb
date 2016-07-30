@@ -69,7 +69,8 @@ module DateParser
     
     interpreted_dates = NaturalDateParsing::interpret_date(txt, 
                                                            creation_date, 
-                                                           parse_single_years)
+                                                           parse_single_years,
+                                                           parse_ambiguous_dates)
     
     if unique
       interpreted_dates.uniq!
