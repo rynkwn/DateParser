@@ -61,6 +61,10 @@ module DateParser
   #    DateParser::parse("No dates here", nil, nil_date: Date.parse("Jan 1 2012"))
   #        #=> [#<Date: 2012-01-01 ((2455928j,0s,0n),+0s,2299161j)>]
   #
+  #    creation_date = Date.parse("July 15, 2016")
+  #    DateParser::parse("He was 1st!", creation_date)
+  #        #=> [#<Date: 2016-07-01 ((2457571j,0s,0n),+0s,2299161j)>]
+  #
   def DateParser.parse(txt, creation_date = nil, opts = {})
     unique = opts[:unique] || false
     nil_date = opts[:nil_date] || nil
