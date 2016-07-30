@@ -77,10 +77,13 @@ module NaturalDateParsing
   # ==== Attributes
   #
   # * +txt+ - The text to parse.
+  #
   # * +creation_date+ - A Date object of when the text was created or released. 
-  # Defaults to nil, but if provided can make returned dates more accurate.
+  #   Defaults to nil, but if provided can make returned dates more accurate.
+  #
   # * +parse_single_years+ - A boolean. If true, we interpret single numbers as
-  # years. This is a very broad assumption, and so defaults to false.
+  #   years. This is a very broad assumption, and so defaults to false.
+  #
   # * +:parse_ambiguous_dates+ - Some phrases are not necessarily dates depending
   #   on context. For example "1st" may not refer to 
   #   the 1st of a month. This option toggles whether or not those
@@ -189,10 +192,12 @@ module NaturalDateParsing
   # ==== Attributes
   #
   # * +word+ - A String, preferably consisting of a single word.
+  #
   # * +creation_date+ - A Date object of when the text was created or released. 
-  # Defaults to nil, but if provided can make returned dates more accurate.
+  #   Defaults to nil, but if provided can make returned dates more accurate.
+  #
   # * +parse_single_years+ - A boolean. If true, we interpret single numbers as
-  # years. This is a very broad assumption, and so defaults to false.
+  #   years. This is a very broad assumption, and so defaults to false.
   #
   def NaturalDateParsing.parse_one_word(
                                         word, 
@@ -279,8 +284,9 @@ module NaturalDateParsing
   # ==== Attributes
   #
   # * +words+ - An array of two words, downcased and stripped.
+  #
   # * +creation_date+ - A Date object of when the text was created or released. 
-  # Defaults to nil, but if provided can make returned dates more accurate.
+  #   Defaults to nil, but if provided can make returned dates more accurate.
   #
   def NaturalDateParsing.parse_two_words(words, creation_date = nil)
     
@@ -300,8 +306,9 @@ module NaturalDateParsing
   # ==== Attributes
   #
   # * +words+ - An array of three words, downcased and stripped.
+  #
   # * +creation_date+ - A Date object of when the text was created or released. 
-  # Defaults to nil, but if provided can make returned dates more accurate.
+  #   Defaults to nil, but if provided can make returned dates more accurate.
   #
   def NaturalDateParsing.parse_three_words(words, creation_date = nil)
 
