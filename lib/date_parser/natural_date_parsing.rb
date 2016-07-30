@@ -263,7 +263,6 @@ module NaturalDateParsing
     
     # Parsing strings like "23rd"
     if (SUFFIXED_NUMERIC_DAY.include? word) && parse_ambiguous_dates
-      puts parse_ambiguous_dates
       return numeric_single_day(word, creation_date)
     end
     

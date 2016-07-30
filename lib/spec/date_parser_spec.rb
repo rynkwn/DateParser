@@ -77,7 +77,7 @@ describe DateParser do
                 Date.parse("January 1, 402")]
       
       it "Returns unique dates and parses ints as years." do
-        expect(DateParser::parse(text, creation_date, parse_ambiguous_dates: false)).to eql(answer)
+        expect(DateParser::parse(text, creation_date, unique: true, parse_single_years: true)).to eql(answer)
       end
     end
   end
