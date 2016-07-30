@@ -17,14 +17,18 @@ module DateParser
   # ==== Attributes
   #
   # * +txt+ - The text to parse.
+  #
   # * +creation_date+ - A Date object of when the text was created or released. 
   #   Defaults to nil, but if provided can make returned dates more accurate.
   #
   # ==== Options
   #
   # * +:unique+ - Return only unique Date objects. Defaults to false
+  #
   # * +:nil_date+ - A date to return if no dates are parsed. Defaults to nil.
+  #
   # * +:parse_single_years+ - Parse single ints as years. Defaults to false.
+  #
   # * +:parse_ambiguous_dates+ - Some phrases are not necessarily dates depending
   #   on context. For example "1st" may not refer to 
   #   the 1st of a month. This option toggles whether or not those
