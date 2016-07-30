@@ -73,10 +73,10 @@ module DateParser
   #        #=> []
   #
   def DateParser.parse(txt, creation_date = nil, opts = {})
-    unique = opts[:unique] || false
-    nil_date = opts[:nil_date] || nil
-    parse_single_years = opts[:parse_single_years] || false
-    parse_ambiguous_dates = opts[:parse_ambiguous_dates] || true
+    unique = opts[:unique].nil? ? false : opts[:unique]
+    nil_date = opts[:nil_date].nil? ? nil : opts[:nil_date]
+    parse_single_years = opts[:parse_single_years].nil? ? false : opts[:parse_single_years]
+    parse_ambiguous_dates = opts[:parse_ambiguous_dates].nil? ? true : opts[:parse_ambiguous_dates]
     
     interpreted_dates = NaturalDateParsing::interpret_date(txt, 
                                                            creation_date, 
