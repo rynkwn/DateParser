@@ -35,15 +35,6 @@ DateParser::parse(text, creation_date).to_s
     #=> [#<Date: 1994-01-11 ((2449364j,0s,0n),+0s,2299161j)>]
 
 
-text = "The first time I asked someone on a date, I was in Iowa, it was a " +
-       "winterly mid-month January, we were to go to finding nemo, I was 9, and " +
-       "although she was interested, her parents said no."
-creation_date = Date.parse("July 6, 2016")
-
-DateParser::parse(text, creation_date).to_s
-    #=> [#<Date: 2016-01-01 ((2457389j,0s,0n),+0s,2299161j)>]
-
-
 text = "7-24-2015"
 DateParser::parse(text).to_s
     #=> [#<Date: 2015-07-24 ((2457228j,0s,0n),+0s,2299161j)>]
@@ -121,7 +112,10 @@ to the `creation_date`.
 * `unique`: (boolean) Return only unique dates in the output array.
 * `nil_date`: (Date) If no dates are found, instead of returning an empty array,
 return an array containing only `nil_date`.
-* `parse_single_years`: (boolean) Should the parser interpret integers as years?
+* `parse_single_years`: (boolean) Interpret integers as years.
+* `parse_ambiguous_dates`: (boolean) Some phrases are not necessarily dates depending
+on context. For example "1st" may not refer to the 1st of a month. 
+This option toggles whether or not those phrases are considered dates. Defaults to true.
 
 # Requests or Bugs?
 Leave an issue on this Github page! I'll most likely get back to you within 24

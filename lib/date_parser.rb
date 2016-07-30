@@ -17,14 +17,22 @@ module DateParser
   # ==== Attributes
   #
   # * +txt+ - The text to parse.
+  #
   # * +creation_date+ - A Date object of when the text was created or released. 
-  # Defaults to nil, but if provided can make returned dates more accurate.
+  #   Defaults to nil, but if provided can make returned dates more accurate.
   #
   # ==== Options
   #
   # * +:unique+ - Return only unique Date objects. Defaults to false
+  #
   # * +:nil_date+ - A date to return if no dates are parsed. Defaults to nil.
-  # * +:parse_single_years+ - Should we parse single ints as years? Defaults to false.
+  #
+  # * +:parse_single_years+ - Parse single ints as years. Defaults to false.
+  #
+  # * +:parse_ambiguous_dates+ - Some phrases are not necessarily dates depending
+  #   on context. For example "1st" may not refer to 
+  #   the 1st of a month. This option toggles whether or not those
+  #   phrases are considered dates. Defaults to true.
   #
   # ==== Examples
   #
@@ -57,14 +65,23 @@ module DateParser
   #    DateParser::parse("No dates here", nil, nil_date: Date.parse("Jan 1 2012"))
   #        #=> [#<Date: 2012-01-01 ((2455928j,0s,0n),+0s,2299161j)>]
   #
+  #    creation_date = Date.parse("July 15, 2016")
+  #    DateParser::parse("He was 1st!", creation_date)
+  #        #=> [#<Date: 2016-07-01 ((2457571j,0s,0n),+0s,2299161j)>]
+  #
+  #    DateParser::parse("He was 1st!", creation_date, parse_ambiguous_dates: false)
+  #        #=> []
+  #
   def DateParser.parse(txt, creation_date = nil, opts = {})
-    unique = opts[:unique] || false
-    nil_date = opts[:nil_date] || nil
-    parse_single_years = opts[:parse_single_years] || false
+    unique = opts[:unique].nil? ? false : opts[:unique]
+    nil_date = opts[:nil_date].nil? ? nil : opts[:nil_date]
+    parse_single_years = opts[:parse_single_years].nil? ? false : opts[:parse_single_years]
+    parse_ambiguous_dates = opts[:parse_ambiguous_dates].nil? ? true : opts[:parse_ambiguous_dates]
     
     interpreted_dates = NaturalDateParsing::interpret_date(txt, 
                                                            creation_date, 
-                                                           parse_single_years)
+                                                           parse_single_years,
+                                                           parse_ambiguous_dates)
     
     if unique
       interpreted_dates.uniq!
