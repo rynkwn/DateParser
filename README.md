@@ -112,7 +112,10 @@ to the `creation_date`.
 * `unique`: (boolean) Return only unique dates in the output array.
 * `nil_date`: (Date) If no dates are found, instead of returning an empty array,
 return an array containing only `nil_date`.
-* `parse_single_years`: (boolean) Should the parser interpret integers as years?
+* `parse_single_years`: (boolean) Interpret integers as years.
+* `parse_ambiguous_dates`: (boolean) Some phrases are not necessarily dates depending
+on context. For example "1st" may not refer to the 1st of a month. 
+This option toggles whether or not those phrases are considered dates. Defaults to true.
 
 # Requests or Bugs?
 Leave an issue on this Github page! I'll most likely get back to you within 24
