@@ -35,15 +35,6 @@ DateParser::parse(text, creation_date).to_s
     #=> [#<Date: 1994-01-11 ((2449364j,0s,0n),+0s,2299161j)>]
 
 
-text = "The first time I asked someone on a date, I was in Iowa, it was a " +
-       "winterly mid-month January, we were to go to finding nemo, I was 9, and " +
-       "although she was interested, her parents said no."
-creation_date = Date.parse("July 6, 2016")
-
-DateParser::parse(text, creation_date).to_s
-    #=> [#<Date: 2016-01-01 ((2457389j,0s,0n),+0s,2299161j)>]
-
-
 text = "7-24-2015"
 DateParser::parse(text).to_s
     #=> [#<Date: 2015-07-24 ((2457228j,0s,0n),+0s,2299161j)>]
