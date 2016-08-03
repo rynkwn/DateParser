@@ -1,7 +1,7 @@
 # DateParser
 
 DateParser is a simple, fast, effective way of parsing dates from natural language
-text in a flexible way.
+text.
 
 # Installation
 ```
