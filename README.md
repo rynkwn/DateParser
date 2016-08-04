@@ -8,7 +8,7 @@ text.
 $ gem install date_parser
 ```
 
-# Usage
+# Examples
 ```ruby
 require 'date_parser'
 
@@ -88,7 +88,7 @@ DateParser::parse("No dates here",
     #=> [#<Date: 2016-01-01 ((2457389j,0s,0n),+0s,2299161j)>]
 ```
 
-# Examples
+# Usage
 
 DateParser has just one function: `parse(txt, creation_date, opts)`, which
 always returns an array with Date elements parsed from the text. If DateParser
