@@ -39,4 +39,9 @@ module Utils
     
     return array
   end
+  
+  # Checks the class of a Ruby object, raising an exception if it's not
+  # what we expect.
+  def Utils.check_class(obj, expected_class, exception)
+  end
 end

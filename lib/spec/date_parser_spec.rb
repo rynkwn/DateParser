@@ -115,4 +115,21 @@ describe DateParser do
       end
     end
   end
+  
+  #########################################################
+  ##
+  ## Type Testing
+  ##
+  
+  describe ".parse" do
+    context "Passing an int for creation_date" do
+      text = "2012-02-12"
+      creation_date = 12
+      
+      it "Raises an exception" do
+        expect { DateParser::parse(text, creation_date) }.to raise_exception
+      end
+    end
+    
+  end
 end

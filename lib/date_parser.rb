@@ -20,6 +20,8 @@ module DateParser
   #
   # * +creation_date+ - A Date object of when the text was created or released. 
   #   Defaults to nil, but if provided can make returned dates more accurate.
+  #   This is intentionally checked to be a Date object, as other data types
+  #   may cause unforeseen behavior.
   #
   # ==== Options
   #
