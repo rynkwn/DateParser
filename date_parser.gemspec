@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'date_parser'
-  s.version     = '0.1.3'
+  s.version     = '0.1.31'
   s.date        = '2016-09-15'
   s.summary     = "Robust natural language parsing for dates."
   s.description = "DateParser is a simple, fast, and effective way to " +
