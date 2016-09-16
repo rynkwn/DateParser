@@ -115,4 +115,54 @@ describe DateParser do
       end
     end
   end
+  
+  #########################################################
+  ##
+  ## Type Testing
+  ##
+  
+  #########################
+  ## Negative Tests
+  ##
+  describe ".parse" do
+    context "Passing an int for creation_date" do
+      text = "2012-02-12"
+      creation_date = 12
+      
+      it "Raises an exception" do
+        expect { DateParser::parse(text, creation_date) }.to raise_exception(ArgumentError)
+      end
+    end
+    
+    context "Passing a String for creation_date" do
+      text = "2012-02-12"
+      creation_date = "Test"
+      
+      it "Raises an exception" do
+        expect { DateParser::parse(text, creation_date) }.to raise_exception(ArgumentError)
+      end
+    end
+    
+    context "Passing a Time for creation_date" do
+      text = "2012-02-12"
+      creation_date = Time.at(0)
+      
+      it "Raises an exception" do
+        expect { DateParser::parse(text, creation_date) }.to raise_exception(ArgumentError)
+      end
+    end
+    
+    #########################
+    ## Positive Tests
+    ##
+    context "Passing in a DateTime object for creation_date" do
+      text = "Something something something march 4 something something"
+      creation_date = DateTime.parse("Jan 1, 2004")
+      answer = [Date.parse("March 4, 2004")]
+      
+      it "Does not raise an exception, and produces the correct answer" do
+        expect(DateParser::parse(text, creation_date)).to eql(answer)
+      end
+    end
+  end
 end

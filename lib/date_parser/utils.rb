@@ -31,6 +31,9 @@ module Utils
   end
   
   # Performs delete_at for a range of integers
+  #
+  # Assumes that the integers in range are contiguous, and sorted in ascending
+  # order.
   def Utils.delete_at_indices(array, range)
     first_val = range.first
     for _ in range do
@@ -38,5 +41,11 @@ module Utils
     end
     
     return array
+  end
+  
+  # Checks to see if an object is descended from an ancestor (or is the ancestor)
+  # nil_accepted is a flag that checks 
+  def Utils.descended_from?(obj, ancestor, nil_accepted = true)
+    return obj.nil? ? nil_accepted : obj.class.ancestors.include?(ancestor)
   end
 end

@@ -1,3 +1,8 @@
+# DateParser 0.1.3
+* New internal checks to avoid ambiguous behavior.
+    + Notably: creation_date is enforced to be a descendent of the Date class.
+* New tests to ensure that the program fails when unexpected types are passed in.
+
 # DateParser 0.1.2
 * New option: `parse_ambiguous_dates` flag, which determines whether or not some 
 looser phrases are considered dates.

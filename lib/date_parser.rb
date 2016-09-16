@@ -20,6 +20,8 @@ module DateParser
   #
   # * +creation_date+ - A Date object of when the text was created or released. 
   #   Defaults to nil, but if provided can make returned dates more accurate.
+  #   This is intentionally checked to be a Date object, as other data types
+  #   may cause unforeseen behavior.
   #
   # ==== Options
   #
@@ -77,6 +79,11 @@ module DateParser
     nil_date = opts[:nil_date].nil? ? nil : opts[:nil_date]
     parse_single_years = opts[:parse_single_years].nil? ? false : opts[:parse_single_years]
     parse_ambiguous_dates = opts[:parse_ambiguous_dates].nil? ? true : opts[:parse_ambiguous_dates]
+    
+    if ! Utils::descended_from?(creation_date, Date)
+      raise ArgumentError, "creation_date must be a descendent of the Date class." +
+                           "Otherwise, ambiguous behavior may result."
+    end
     
     interpreted_dates = NaturalDateParsing::interpret_date(txt, 
                                                            creation_date, 
