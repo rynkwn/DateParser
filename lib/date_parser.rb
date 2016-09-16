@@ -80,6 +80,9 @@ module DateParser
     parse_single_years = opts[:parse_single_years].nil? ? false : opts[:parse_single_years]
     parse_ambiguous_dates = opts[:parse_ambiguous_dates].nil? ? true : opts[:parse_ambiguous_dates]
     
+    if Utils::
+    end
+    
     interpreted_dates = NaturalDateParsing::interpret_date(txt, 
                                                            creation_date, 
                                                            parse_single_years,

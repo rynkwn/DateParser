@@ -31,6 +31,9 @@ module Utils
   end
   
   # Performs delete_at for a range of integers
+  #
+  # Assumes that the integers in range are contiguous, and sorted in ascending
+  # order.
   def Utils.delete_at_indices(array, range)
     first_val = range.first
     for _ in range do
@@ -38,10 +41,5 @@ module Utils
     end
     
     return array
-  end
-  
-  # Checks the class of a Ruby object, raising an exception if it's not
-  # what we expect.
-  def Utils.check_class(obj, expected_class, exception)
   end
 end
