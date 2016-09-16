@@ -80,7 +80,9 @@ module DateParser
     parse_single_years = opts[:parse_single_years].nil? ? false : opts[:parse_single_years]
     parse_ambiguous_dates = opts[:parse_ambiguous_dates].nil? ? true : opts[:parse_ambiguous_dates]
     
-    if Utils::
+    if ! Utils::descended_from?(creation_date, Date)
+      raise ArgumentError, "creation_date must be a descendent of the Date class." +
+                           "Otherwise, ambiguous behavior may result."
     end
     
     interpreted_dates = NaturalDateParsing::interpret_date(txt, 

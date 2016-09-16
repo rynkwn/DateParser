@@ -130,7 +130,7 @@ describe DateParser do
       creation_date = 12
       
       it "Raises an exception" do
-        expect { DateParser::parse(text, creation_date) }.to raise_exception
+        expect { DateParser::parse(text, creation_date) }.to raise_exception(ArgumentError)
       end
     end
     
@@ -139,7 +139,7 @@ describe DateParser do
       creation_date = "Test"
       
       it "Raises an exception" do
-        expect { DateParser::parse(text, creation_date) }.to raise_exception
+        expect { DateParser::parse(text, creation_date) }.to raise_exception(ArgumentError)
       end
     end
     
@@ -148,7 +148,7 @@ describe DateParser do
       creation_date = Time.at(0)
       
       it "Raises an exception" do
-        expect { DateParser::parse(text, creation_date) }.to raise_exception
+        expect { DateParser::parse(text, creation_date) }.to raise_exception(ArgumentError)
       end
     end
     
