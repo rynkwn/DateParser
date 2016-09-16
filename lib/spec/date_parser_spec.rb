@@ -121,6 +121,9 @@ describe DateParser do
   ## Type Testing
   ##
   
+  #########################
+  ## Negative Tests
+  ##
   describe ".parse" do
     context "Passing an int for creation_date" do
       text = "2012-02-12"
@@ -149,6 +152,9 @@ describe DateParser do
       end
     end
     
+    #########################
+    ## Positive Tests
+    ##
     context "Passing in a DateTime object for creation_date" do
       text = "Something something something march 4 something something"
       creation_date = DateTime.parse("Jan 1, 2004")

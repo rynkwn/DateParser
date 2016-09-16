@@ -42,4 +42,10 @@ module Utils
     
     return array
   end
+  
+  # Checks to see if an object is descended from an ancestor (or is the ancestor)
+  # nil_accepted is a flag that checks 
+  def Utils.descended_from?(obj, ancestor, nil_accepted = true)
+    return obj.nil? ? nil_accepted : obj.class.ancestors.include?(ancestor)
+  end
 end
