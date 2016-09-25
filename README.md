@@ -118,5 +118,4 @@ on context. For example "1st" may not refer to the 1st of a month.
 This option toggles whether or not those phrases are considered dates. Defaults to true.
 
 # Requests or Bugs?
-Leave an issue on this Github page! I'll most likely get back to you within 24
-hours.
+Feel free to contact me at rynkwn@gmail.com!

@@ -81,7 +81,8 @@ module DateParser
     parse_ambiguous_dates = opts[:parse_ambiguous_dates].nil? ? true : opts[:parse_ambiguous_dates]
     
     if ! Utils::descended_from?(creation_date, Date)
-      raise ArgumentError, "creation_date must be a descendent of the Date class." +
+      raise ArgumentError, "creation_date must be a descendent of the Date class. " +
+                           "(Preferably Date or DateTime) " +
                            "Otherwise, ambiguous behavior may result."
     end
     
