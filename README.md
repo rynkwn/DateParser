@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/date_parser.svg)](https://badge.fury.io/rb/date_parser)
+
 # DateParser
 
 DateParser is a simple, fast, effective way of parsing dates from natural language
