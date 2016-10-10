@@ -1,31 +1,32 @@
 require_relative "utils"
 
-# Handles the mechanics of natural language processing.
-#
-# == Methods
-#
-# <b>interpret_date(txt, creation_date, parse_single_years)</b>: 
-# Return an array of dates from the set of parameters.
-#
-# We parse in order of decreasing
-# strictness. I.e., a very specific phrase like "January 1st, 2013" will be parsed
-# before "January 1st," which will be parsed before just "2013". Whenever we
-# determine a phrase is part of a date, we remove the phrase after parsing.
-# So in the example "January 1st, 2013" we'll return only one date.
-#
-# If no dates are found, returns an empty array.
-#
-# <b>parse_one_word(word, creation_date, parse_single_years)</b>: Given a single word,
-# a string, tries to return a Date object.
-#
-# <b>parse_two_words(words, creation_date = nil)</b>: Attempts to return a Date object
-# given a string containing two words.
-#
-# <b>parse_three_words(words, creation_date = nil)</b>: Given three words,
-# attempts to return a Date object.
-#
-
 module DateParser
+  
+  # Handles the mechanics of natural language processing.
+  #
+  # == Methods
+  #
+  # <b>interpret_date(txt, creation_date, parse_single_years)</b>: 
+  # Return an array of dates from the set of parameters.
+  #
+  # We parse in order of decreasing
+  # strictness. I.e., a very specific phrase like "January 1st, 2013" will be parsed
+  # before "January 1st," which will be parsed before just "2013". Whenever we
+  # determine a phrase is part of a date, we remove the phrase after parsing.
+  # So in the example "January 1st, 2013" we'll return only one date.
+  #
+  # If no dates are found, returns an empty array.
+  #
+  # <b>parse_one_word(word, creation_date, parse_single_years)</b>: Given a single word,
+  # a string, tries to return a Date object.
+  #
+  # <b>parse_two_words(words, creation_date = nil)</b>: Attempts to return a Date object
+  # given a string containing two words.
+  #
+  # <b>parse_three_words(words, creation_date = nil)</b>: Given three words,
+  # attempts to return a Date object.
+  #
+  
   module NaturalDateParsing
     
     ###############################################
