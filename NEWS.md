@@ -1,3 +1,6 @@
+# DateParser 0.1.4
+* Improved namespacing
+
 # DateParser 0.1.3
 * New internal checks to avoid ambiguous behavior.
     + Notably: creation_date is enforced to be a descendent of the Date class.
