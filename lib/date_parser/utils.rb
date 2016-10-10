@@ -1,4 +1,7 @@
 # Extra utility functions for broader use in the gem.
+#
+
+# Extra utility functions for broader use in the gem.
 
 module DateParser
   module Utils

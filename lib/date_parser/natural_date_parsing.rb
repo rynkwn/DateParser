@@ -18,6 +18,12 @@ require_relative "utils"
 # <b>parse_one_word(word, creation_date, parse_single_years)</b>: Given a single word,
 # a string, tries to return a Date object.
 #
+# <b>parse_two_words(words, creation_date = nil)</b>: Attempts to return a Date object
+# given a string containing two words.
+#
+# <b>parse_three_words(words, creation_date = nil)</b>: Given three words,
+# attempts to return a Date object.
+#
 
 module DateParser
   module NaturalDateParsing
