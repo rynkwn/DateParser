@@ -1,4 +1,3 @@
-require_relative 'date_utils'
 require_relative "utils"
 
 # Handles the mechanics of natural language processing.
