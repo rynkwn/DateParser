@@ -1,3 +1,9 @@
+# DateParser 0.1.4
+* Improved namespacing.
+    + NaturalDateParsing and Utils now part of the DateParser namespace.
+* Removed an unused utils file.
+* Some documentation expansion.
+
 # DateParser 0.1.3
 * New internal checks to avoid ambiguous behavior.
     + Notably: creation_date is enforced to be a descendent of the Date class.

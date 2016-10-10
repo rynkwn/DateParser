@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'date_parser'
-  s.version     = '0.1.32'
-  s.date        = '2016-09-25'
+  s.version     = '0.1.40'
+  s.date        = '2016-10-10'
   s.summary     = "Robust natural language parsing for dates."
   s.description = "DateParser is a simple, fast, and effective way to " +
                   "parse dates from natural language text."
@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.email       = 'rynkwn@gmail.com'
   s.files       = ["lib/date_parser.rb", 
   
-                   "lib/date_parser/date_utils.rb",
                    "lib/date_parser/natural_date_parsing.rb",
                    "lib/date_parser/utils.rb"]
   s.test_files  = ["lib/spec/date_parser_spec.rb",
