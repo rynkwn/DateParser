@@ -1,6 +1,6 @@
 require_relative "../date_parser"
 
-describe NaturalDateParsing do
+describe DateParser::NaturalDateParsing do
   
   #########################################################
   ##
@@ -25,26 +25,26 @@ describe NaturalDateParsing do
   describe ".interpret_date" do
     context "given 'April 6th, 2014'" do
       it "returns Sun, 06 Apr 2014 as a date object" do
-        expect(NaturalDateParsing::interpret_date(@date)).to eql(@parsed_date)
+        expect(DateParser::NaturalDateParsing::interpret_date(@date)).to eql(@parsed_date)
       end
     end
     
     context "given a sentence containing April 6th, 2014" do
       it "returns Sun, 06 Apr 2014 as a date object" do 
-        expect(NaturalDateParsing::interpret_date(@text)).to eql(@parsed_date)
+        expect(DateParser::NaturalDateParsing::interpret_date(@text)).to eql(@parsed_date)
       end
     end
     
     context "given a paragraph containing several dates" do
       it "returns a list of all dates mentioned in the paragraph" do
-        expect(NaturalDateParsing::interpret_date(@paragraph)).to eql(@parsed_date_paragraph)
+        expect(DateParser::NaturalDateParsing::interpret_date(@paragraph)).to eql(@parsed_date_paragraph)
       end
     end
   end
 end
 
 
-describe NaturalDateParsing do
+describe DateParser::NaturalDateParsing do
   
   #########################################################
   ##
@@ -62,7 +62,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("February 27, 1844")]
       
       it "captures the single date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -72,7 +72,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("July 4th, 2016")]
       
       it "correctly uses the creation_date parameter" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -82,7 +82,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("February 12, 1994")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -92,7 +92,7 @@ describe NaturalDateParsing do
       answer = [Date.today - 1]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -102,7 +102,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("January 11, 1994")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -113,7 +113,7 @@ describe NaturalDateParsing do
       parse_single_years = true
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date, parse_single_years)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date, parse_single_years)).to eql(answer)
       end
     end
     
@@ -123,7 +123,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("March 4, 2004")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -131,7 +131,7 @@ describe NaturalDateParsing do
 end
 
 
-describe NaturalDateParsing do
+describe DateParser::NaturalDateParsing do
   
   #########################################################
   ##
@@ -148,7 +148,7 @@ describe NaturalDateParsing do
       parse_single_years = true
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date, parse_single_years)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date, parse_single_years)).to eql(answer)
       end
     end
     
@@ -172,7 +172,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("August 25, 2013")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -184,7 +184,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("March 14, 1933")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -195,7 +195,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("July 4, 2016")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -205,7 +205,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("October 3, 2016")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -218,7 +218,7 @@ describe NaturalDateParsing do
                 Date.parse("July 11, 2016")] # Reconsider
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -228,7 +228,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("September 4, 1981")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -240,7 +240,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("January 1st, 2016")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     
@@ -252,7 +252,7 @@ describe NaturalDateParsing do
       answer = [Date.parse("June 8, 2016")]
       
       it "correctly grabs the date" do
-        expect(NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
+        expect(DateParser::NaturalDateParsing::interpret_date(text, creation_date)).to eql(answer)
       end
     end
     

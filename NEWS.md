@@ -1,5 +1,7 @@
 # DateParser 0.1.4
 * Improved namespacing
+    + NaturalDateParsing and Utils now part of the DateParser namespace.
+* Removed an unused utils file.
 
 # DateParser 0.1.3
 * New internal checks to avoid ambiguous behavior.
