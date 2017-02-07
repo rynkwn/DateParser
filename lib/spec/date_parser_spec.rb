@@ -114,6 +114,33 @@ describe DateParser do
         expect(DateParser::parse(text)).to eql(answer)
       end
     end
+    
+    context "Parse date separated by /" do
+      text = "2012/02/12"
+      answer = [Date.parse("2012-02-12")]
+      
+      it "correctly grabs the date" do
+        expect(DateParser::parse(text)).to eql(answer)
+      end
+    end
+    
+    context "Parse American date separated by /" do
+      text = "7/24/2015"
+      answer = [Date.parse("July 24, 2015")]
+      
+      it "correctly grabs the date" do
+        expect(DateParser::parse(text)).to eql(answer)
+      end
+    end
+    
+    context "Parse International Standard fully numeric date separated by /" do
+      text = "24/07/2015"
+      answer = [Date.parse("24-07-2015")]
+      
+      it "correctly grabs the date" do
+        expect(DateParser::parse(text)).to eql(answer)
+      end
+    end
   end
   
   #########################################################

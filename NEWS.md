@@ -1,3 +1,7 @@
+# DateParser 0.1.51
+* Missed a common case: XX/XX/XXXX and variations. Now resolved.
+* Strengthened check for dates that could be of the form XX/XX
+
 # DateParser 0.1.4
 * Improved namespacing.
     + NaturalDateParsing and Utils now part of the DateParser namespace.

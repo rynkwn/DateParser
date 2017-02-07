@@ -263,11 +263,6 @@ module DateParser
         end
       end
       
-      # Parsing strings of the form XX/XX
-      if word.include? '/'
-        return slash_date(word, creation_date)
-      end
-      
       # Parsing strings like "23rd"
       if (SUFFIXED_NUMERIC_DAY.include? word) && parse_ambiguous_dates
         return numeric_single_day(word, creation_date)
@@ -283,11 +278,15 @@ module DateParser
         return default_year(word)
       end
       
-      # Parsing XX-XX-XXXX or XXXX-XX-XX
+      # Parsing XX-XX-XXXX, XXXX-XX-XX, XX/XX/XXXX, or XXXX/XX/XX
       if full_numeric_date?(word)
         return full_numeric_date(word)
       end
       
+      # Parsing strings of the form XX/XX
+      if slash_date?(word)
+        return slash_date(word, creation_date)
+      end
     end
     
     
@@ -389,8 +388,11 @@ module DateParser
     end
     
     # Parses a single word of the form XXXX-XX-XX, DD-MM-YYYY or MM-DD-YYYY
+    # Also accepts words of the form XXXX/XX/XX
     def NaturalDateParsing.full_numeric_date(word)
-      subparts = word.split("-")
+      demarcating_token = get_demarcating_token(word)
+      
+      subparts = word.split(demarcating_token)
       
       # This is a weak check to see where the year is
       year_index = (subparts[0].to_i).abs > 31 ? 0 : 2
@@ -456,28 +458,67 @@ module DateParser
       return ((date1 - date2) / 7).to_i
     end
     
-    # Is it of the form XXXX-XX-XX?
-    def NaturalDateParsing.full_numeric_date?(word)
-      output = true
+    # Determines if a given date could be a slash date.
+    # I.e., of the form XX/XX
+    def NaturalDateParsing.slash_date?(word)
+      substrings = word.split("/")
       
-      if word.include? "-"
-        substrings = word.split("-")
-        for substring in substrings do
-          output = output && Utils.is_int?(substring)
-        end
-      else
-        output = false
+      if substrings.size != 2
+        return false
       end
       
-      return output
+      for substring in substrings do
+        if !Utils.is_int?(substring)
+          return false
+        end
+      end
+      
+      return true
     end
     
+    # Is it generally of the form XXXX-XX-XX or XXXX/XX/XX?
+    def NaturalDateParsing.full_numeric_date?(word)
+      demarcating_token = get_demarcating_token(word)
+      substrings = word.split(demarcating_token)
+      
+      if substrings.length != 3
+        return false
+      end
+      
+      for substring in substrings do
+        if !Utils.is_int?(substring)
+          return false
+        end
+      end
+      
+      return true
+    end
+    
+    # Converts a numeric month to a string.
     def NaturalDateParsing.numeric_month_to_string(numeric)
       months = ["january", "february", "march", "april", "may", "june",
                 "july", "august", "september", "october", "november",
                 "december"]
       
       return months[numeric - 1]
+    end
+    
+    # Given a string, tries to determine if the word
+    # contains a demarcating token such as '-' or '/'
+    # If so, returns that demarcating token. Assumes that
+    # only one such token is present.
+    #
+    # If no such token is found, returns an empty string.
+    def NaturalDateParsing.get_demarcating_token(word)
+      demarcating_token = ""
+      
+      if word.include? "-"
+        demarcating_token = "-"
+      elsif word.include? "/"
+        demarcating_token = "/"
+      end
+      
+      return demarcating_token
     end
     
   end
