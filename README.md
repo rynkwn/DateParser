@@ -41,6 +41,7 @@ text = "7-24-2015"
 DateParser::parse(text).to_s
     #=> [#<Date: 2015-07-24 ((2457228j,0s,0n),+0s,2299161j)>]
     
+    
 text = "7/24/2015"
 DateParser::parse(text).to_s
     #=> [#<Date: 2015-07-24 ((2457228j,0s,0n),+0s,2299161j)>]
